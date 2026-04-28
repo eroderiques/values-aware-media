@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Next Steps & Resources | Values-aware journalism</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --navy: #0A0A78; --magenta: #E5007D; --lime: #C8E000; --white: #ffffff; --off-white: #F7F7F2; --light-grey: #EBEBEB; --text: #333333; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Open Sans', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+
+  nav { background: var(--navy); padding: 0 64px; display: flex; align-items: center; justify-content: space-between; height: 68px; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 13px; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none !important; }
+  .nav-logo span { color: var(--magenta); }
+  .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+  .nav-links a { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); }
+  .nav-cta { background: var(--magenta); color: var(--white) !important; padding: 10px 22px; }
+
+  .page-hero { background: var(--navy); padding: 80px 64px; position: relative; overflow: hidden; }
+  .page-hero::after { content: ''; position: absolute; bottom: 0; right: 0; width: 280px; height: 280px; background: var(--magenta); clip-path: polygon(100% 0, 0 100%, 100% 100%); opacity: 0.45; }
+  .page-hero-inner { position: relative; z-index: 2; max-width: 800px; }
+  .page-hero h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(36px, 5vw, 60px); color: var(--white); line-height: 1.05; margin-bottom: 24px; }
+  .hero-rule { width: 64px; height: 4px; background: var(--lime); margin: 24px 0; }
+  .page-hero p { font-size: 19px; line-height: 1.75; color: rgba(255,255,255,0.8); max-width: 620px; }
+
+  .content-wrap { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+  .sidebar { background: var(--off-white); padding: 48px 32px; border-right: 1px solid var(--light-grey); position: sticky; top: 68px; height: calc(100vh - 68px); overflow-y: auto; }
+  .sidebar-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #999; margin-bottom: 16px; }
+  .sidebar-links { list-style: none; }
+  .sidebar-links li { margin-bottom: 4px; }
+  .sidebar-links a { font-size: 13px; font-weight: 600; color: #666; text-decoration: none; display: block; padding: 6px 12px; border-left: 3px solid transparent; transition: all 0.15s; line-height: 1.4; }
+  .sidebar-links a:hover { color: var(--navy); border-left-color: var(--navy); background: rgba(10,10,120,0.04); }
+  .sidebar-links a.active { color: var(--navy); border-left-color: var(--magenta); font-weight: 700; }
+
+  .main-content { padding: 64px 80px; max-width: 860px; }
+
+  h2 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 32px; color: var(--navy); line-height: 1.15; margin-bottom: 20px; margin-top: 64px; }
+  h2:first-child { margin-top: 0; }
+  h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 20px; color: var(--navy); margin-bottom: 16px; margin-top: 40px; line-height: 1.3; }
+  p { font-size: 16px; line-height: 1.85; color: var(--text); margin-bottom: 20px; }
+
+  .callout { border-left: 4px solid var(--magenta); padding: 20px 24px; background: var(--off-white); margin: 28px 0; }
+  .callout p { font-size: 15px; font-style: italic; color: var(--navy); line-height: 1.65; margin: 0; }
+
+  /* TIMELINE */
+  .timeline { margin: 36px 0; }
+  .timeline-row { display: grid; grid-template-columns: 120px 1fr; gap: 3px; margin-bottom: 3px; }
+  .timeline-period { padding: 20px 16px; display: flex; align-items: center; justify-content: center; text-align: center; }
+  .timeline-this-week { background: var(--magenta); }
+  .timeline-this-month { background: var(--navy); }
+  .timeline-this-year { background: rgba(200,224,0,0.8); }
+  .timeline-period span { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 12px; color: var(--white); text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.3; }
+  .timeline-this-year span { color: var(--navy); }
+  .timeline-content { background: var(--off-white); padding: 20px 28px; }
+  .timeline-content p { margin: 0; font-size: 15px; line-height: 1.75; color: var(--text); }
+
+  /* CONTACT */
+  .contact-card { background: var(--navy); padding: 56px; margin: 36px 0; }
+  .contact-card h3 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 24px; color: var(--white); margin: 0 0 20px 0; }
+  .contact-card > p { color: rgba(255,255,255,0.75); font-size: 15px; margin-bottom: 32px; }
+  .contact-links { display: flex; flex-direction: column; gap: 16px; }
+  .contact-link { display: flex; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .contact-link:last-child { border-bottom: none; }
+  .contact-link-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--lime); width: 90px; flex-shrink: 0; }
+  .contact-link a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 15px; transition: color 0.2s; }
+  .contact-link a:hover { color: var(--lime); }
+
+  /* FINAL THOUGHTS */
+  .final-thoughts { background: var(--magenta); padding: 64px; margin: 48px 0; position: relative; overflow: hidden; }
+  .final-thoughts::after { content: '"'; position: absolute; right: 48px; bottom: -20px; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 200px; color: rgba(255,255,255,0.08); line-height: 1; }
+  .final-thoughts p { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: clamp(18px, 2vw, 24px); line-height: 1.55; color: var(--white); margin-bottom: 28px; position: relative; z-index: 2; }
+  .final-thoughts p:last-child { margin-bottom: 0; }
+
+  /* DOWNLOAD CTA */
+  .download-cta { background: var(--off-white); padding: 48px; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; margin: 36px 0; }
+  .download-cta h3 { margin: 0 0 10px 0; font-size: 22px; }
+  .download-cta p { margin: 0; font-size: 15px; color: #555; line-height: 1.65; }
+  .download-cta-buttons { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+
+  .btn { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px 28px; text-decoration: none; display: inline-block; transition: all 0.2s; text-align: center; }
+  .btn-magenta { background: var(--magenta); color: var(--white); }
+  .btn-magenta:hover { background: var(--navy); }
+  .btn-navy { background: var(--navy); color: var(--white); }
+  .btn-navy:hover { background: var(--magenta); }
+  .btn-outline { background: transparent; color: var(--navy); border: 2px solid var(--navy); }
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+  .nav-footer { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--light-grey); display: flex; justify-content: flex-start; }
+
+  footer { background: #070740; padding: 48px 64px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 12px; color: var(--white); text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; }
+  .footer-logo span { color: var(--magenta); }
+  .footer-mid { font-size: 12px; color: rgba(255,255,255,0.4); text-align: center; line-height: 1.7; }
+  .footer-mid a { color: var(--lime); text-decoration: none; }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-links a { font-size: 11px; color: rgba(255,255,255,0.35); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; }
+  .footer-links a:hover { color: var(--white); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Values-aware <span>journalism</span></a>
+  <ul class="nav-links">
+    <li><a href="vaj_introduction.html">Introduction</a></li>
+    <li><a href="vaj_framework.html">The Framework</a></li>
+    <li><a href="vaj_apply.html">Apply It</a></li>
+    <li><a href="vaj_tools.html">Practical Tools</a></li>
+    <li><a href="vaj_resources.html" class="active">Resources</a></li>
+    <li><a href="Values%20aware%20journalism%20-%20A%20practical%20toolkit.pdf" class="nav-cta">Download PDF</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--lime); display: block; margin-bottom: 16px;">Part 7</span>
+    <h1>Next Steps &amp; Resources</h1>
+    <div class="hero-rule"></div>
+    <p>Values-aware journalism is a practice that develops over time – you don't need to transform everything at once. Here's how to start, build and connect.</p>
+  </div>
+</div>
+
+<div class="content-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-label">On this page</div>
+    <ul class="sidebar-links">
+      <li><a href="#starting-small" class="active">Starting small</a></li>
+      <li><a href="#building-networks">Building networks</a></li>
+      <li><a href="#acknowledgements">Acknowledgements</a></li>
+      <li><a href="#contributing">Contributing to this work</a></li>
+      <li><a href="#final-thoughts">Final thoughts</a></li>
+      <li><a href="#download">Download the toolkit</a></li>
+      <li><a href="#get-in-touch">Get in touch</a></li>
+    </ul>
+    <hr style="border: none; border-top: 1px solid var(--light-grey); margin: 20px 0;">
+    <div class="sidebar-label">Start from the beginning</div>
+    <ul class="sidebar-links">
+      <li><a href="vaj_introduction.html">Introduction →</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+
+    <h2 id="starting-small">Starting small</h2>
+    <p>You don't need to transform your entire practice at once. Values-aware journalism builds gradually – one story, one conversation, one connection at a time.</p>
+
+    <div class="timeline">
+      <div class="timeline-row">
+        <div class="timeline-period timeline-this-week">
+          <span>This week</span>
+        </div>
+        <div class="timeline-content">
+          <p>Complete the self-assessment (Tool 1). Start to notice values patterns in your own and other people's work. Choose one story and apply the story-level checklist (Tool 2).</p>
+        </div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-period timeline-this-month">
+          <span>This month</span>
+        </div>
+        <div class="timeline-content">
+          <p>Experiment with one alternative framing. Have one conversation with a colleague about values. Document what you're learning. Read Common Cause Foundation's resources at commoncausefoundation.org.</p>
+        </div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-period timeline-this-year">
+          <span>This year</span>
+        </div>
+        <div class="timeline-content">
+          <p>Find two to three other journalists to form a values circle with. Build evidence of the difference that values awareness makes. Reflect on changes in your practice. Connect with Common Cause Foundation.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="building-networks">Building networks</h2>
+    <p>Common Cause Foundation has been working on values and social change for many years, with organisations across the charitable, cultural and media sectors. We can connect you with a broader values awareness movement, share resources and training, and support you in taking this work forward.</p>
+    <p>In the UK, we are currently working with Positive News and Byline Times on what editorial values transparency looks like in practice. We will share learning from those partnerships as they develop.</p>
+
+    <div class="callout">
+      <p>Contact Common Cause Foundation if you'd like to connect with others working in this space – whether you're a freelancer, newsroom leader, or working on structural change in UK media.</p>
+    </div>
+
+    <h2 id="acknowledgements">Acknowledgements</h2>
+    <p>This toolkit builds on decades of research by Common Cause Foundation and many others exploring values, framing and social change. It draws on conversations with journalists, editors, and media workers across the UK and international media sector who generously shared their experiences and perspectives.</p>
+    <p>Special thanks to advisory board members, past and present, of the Values in Media Project: Amélie Reichmuth, Dr Chris Roberts, Denise Baden, Hardeep Matharu, Lucy Stone, Rhodri Davies, Sam Taylor, Sean Wood, Shirish Kulkarni, Simon Hodgson, Molly Tsitsi Chimhanda, David Eyre.</p>
+    <p>Thanks also to all at the Responsible Media Forum for their early conversations and collaborations around this work and our pilot partners Positive News and Byline Times. Finally, much gratitude goes to Sean Wood for his detailed and generous editorial review, and Kirsty Styles for her sustained thought partnership, editorial rigour and commitment to this work throughout.</p>
+
+    <h2 id="contributing">Contributing to this work</h2>
+    <p>This toolkit is a living document. We want to hear from you – with examples of values-aware journalism in practice, strategies for working within constraints, evidence of impacts, questions and challenges, and suggestions for what would be most useful.</p>
+    <p>Get in touch at: info@commoncausefoundation.org</p>
+
+    <h2 id="final-thoughts">Final thoughts</h2>
+
+    <div class="final-thoughts">
+      <p>Values-aware journalism isn't about getting it 'right' or judging current practice. It's about becoming more aware of the choices already present in your work and taking the opportunity to develop your practice through intention and continuous learning.</p>
+      <p>This work asks something real of you. For your attention, honesty and a willingness to sit with discomfort if and when your practice and your values don't quite line up. That takes courage, especially within institutions and systems that are not yet set up to support it.</p>
+      <p>But you are not doing this alone. Every journalist who asks these questions, experiments with a different frame, or has one honest conversation with a colleague is part of something larger. We are building this together and we are genuinely glad you are here.</p>
+    </div>
+
+    <h2 id="download">Download the toolkit</h2>
+    <p>The Values-aware journalism Toolkit is published under a Creative Commons Attribution-NonCommercial 4.0 International licence. You are free to share and adapt this material for non-commercial purposes, provided you give appropriate credit to Common Cause Foundation and indicate if changes are made.</p>
+
+    <div class="download-cta">
+      <div>
+        <h3>Values-aware journalism – a practical toolkit</h3>
+        <p>58 pages · 7 tools · Written and developed by Common Cause Foundation, April 2026 · CC BY-NC 4.0</p>
+      </div>
+      <div class="download-cta-buttons">
+        <a href="Values%20aware%20journalism%20-%20A%20practical%20toolkit.pdf" class="btn btn-magenta">Download PDF</a>
+        <a href="vaj_introduction.html" class="btn btn-outline">Read online</a>
+      </div>
+    </div>
+
+    <h2 id="get-in-touch">Get in touch</h2>
+
+    <div class="contact-card">
+      <h3>Common Cause Foundation</h3>
+      <p>We build the evidence, tools and partnerships that help civil society, media and culture better reflect what most people actually care about. This toolkit is part of that work.</p>
+      <div class="contact-links">
+        <div class="contact-link">
+          <span class="contact-link-label">Email</span>
+          <a href="mailto:info@commoncausefoundation.org">info@commoncausefoundation.org</a>
+        </div>
+        <div class="contact-link">
+          <span class="contact-link-label">Website</span>
+          <a href="https://commoncausefoundation.org" target="_blank">commoncausefoundation.org</a>
+        </div>
+        <div class="contact-link">
+          <span class="contact-link-label">LinkedIn</span>
+          <a href="https://www.linkedin.com/company/common-cause-foundation" target="_blank">Common Cause Foundation</a>
+        </div>
+        <div class="contact-link">
+          <span class="contact-link-label">Bluesky</span>
+          <a href="https://bsky.app/profile/commoncause.bsky.social" target="_blank">@commoncause.bsky.social</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-footer">
+      <a href="vaj_tools.html" class="btn btn-outline">← Practical Tools</a>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <a href="https://commoncausefoundation.org" target="_blank" class="footer-logo" style="text-decoration:none;display:block;flex-shrink:0;"><img src="CCFoundation_MainVersion_White.png" alt="Common Cause Foundation" style="height:48px;width:auto;display:block;"></a>
+  <div class="footer-mid">A project of <a href="https://commoncausefoundation.org">Common Cause Foundation</a><br>valuesawarejournalism.org · CC BY-NC 4.0</div>
+  <div class="footer-links"><a href="vaj_introduction.html">About</a><a href="vaj_resources.html#get-in-touch">Contact</a><a href="https://www.linkedin.com/company/common-cause-foundation" target="_blank">LinkedIn</a><a href="https://bsky.app/profile/commoncause.bsky.social" target="_blank">Bluesky</a></div>
+</footer>
+
+</body>
+</html>

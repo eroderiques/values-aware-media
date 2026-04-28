@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practical Tools | Values-aware journalism</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --navy: #0A0A78; --magenta: #E5007D; --lime: #C8E000; --white: #ffffff; --off-white: #F7F7F2; --light-grey: #EBEBEB; --text: #333333; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Open Sans', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+
+  nav { background: var(--navy); padding: 0 64px; display: flex; align-items: center; justify-content: space-between; height: 68px; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 13px; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none !important; }
+  .nav-logo span { color: var(--magenta); }
+  .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+  .nav-links a { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); }
+  .nav-cta { background: var(--magenta); color: var(--white) !important; padding: 10px 22px; }
+
+  .page-hero { background: var(--navy); padding: 80px 64px; position: relative; overflow: hidden; }
+  .page-hero::before { content: ''; position: absolute; top: 0; right: 0; width: 260px; height: 260px; background: var(--magenta); clip-path: polygon(100% 0, 0 0, 100% 100%); opacity: 0.4; }
+  .page-hero::after { content: ''; position: absolute; bottom: 0; right: 180px; width: 200px; height: 200px; background: var(--lime); clip-path: polygon(100% 0, 0 100%, 100% 100%); opacity: 0.5; }
+  .page-hero-inner { position: relative; z-index: 2; max-width: 800px; }
+  .page-hero h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(36px, 5vw, 60px); color: var(--white); line-height: 1.05; margin-bottom: 24px; }
+  .hero-rule { width: 64px; height: 4px; background: var(--lime); margin: 24px 0; }
+  .page-hero p { font-size: 19px; line-height: 1.75; color: rgba(255,255,255,0.8); max-width: 620px; }
+
+  .tools-nav {
+    background: var(--off-white);
+    border-bottom: 1px solid var(--light-grey);
+    padding: 0 64px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .tools-nav a {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #888;
+    text-decoration: none;
+    padding: 18px 20px;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+
+  .tools-nav a:hover { color: var(--navy); border-bottom-color: var(--navy); }
+  .tools-nav a.active { color: var(--navy); border-bottom-color: var(--magenta); }
+
+  .content-wrap { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+
+  .sidebar { background: var(--off-white); padding: 48px 32px; border-right: 1px solid var(--light-grey); position: sticky; top: 68px; height: calc(100vh - 68px); overflow-y: auto; }
+  .sidebar-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #999; margin-bottom: 16px; }
+  .sidebar-links { list-style: none; }
+  .sidebar-links li { margin-bottom: 4px; }
+  .sidebar-links a { font-size: 13px; font-weight: 600; color: #666; text-decoration: none; display: block; padding: 6px 12px; border-left: 3px solid transparent; transition: all 0.15s; line-height: 1.4; }
+  .sidebar-links a:hover { color: var(--navy); border-left-color: var(--navy); background: rgba(10,10,120,0.04); }
+  .sidebar-links a.active { color: var(--navy); border-left-color: var(--magenta); font-weight: 700; }
+  .sidebar-divider { border: none; border-top: 1px solid var(--light-grey); margin: 20px 0; }
+
+  .main-content { padding: 64px 80px; max-width: 900px; }
+
+  h2 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 28px; color: var(--navy); line-height: 1.15; margin-bottom: 12px; }
+  h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 18px; color: var(--navy); margin-bottom: 14px; margin-top: 36px; line-height: 1.3; }
+  h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; color: var(--navy); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; margin-top: 28px; }
+  p { font-size: 16px; line-height: 1.85; color: var(--text); margin-bottom: 20px; }
+
+  .tool-section {
+    border-top: 1px solid var(--light-grey);
+    padding-top: 56px;
+    margin-top: 56px;
+  }
+
+  .tool-section:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+
+  .tool-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    margin-bottom: 32px;
+  }
+
+  .tool-number {
+    width: 64px;
+    height: 64px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: var(--lime);
+    flex-shrink: 0;
+  }
+
+  .tool-header-text h2 { margin: 0 0 6px 0; }
+  .tool-subtitle { font-size: 15px; color: #777; font-style: italic; }
+
+  .callout { border-left: 4px solid var(--magenta); padding: 20px 24px; background: var(--off-white); margin: 28px 0; }
+  .callout p { font-size: 15px; font-style: italic; color: var(--navy); line-height: 1.65; margin: 0; }
+  .callout-lime { background: rgba(200,224,0,0.15); border-left-color: var(--lime); }
+  .callout-navy { background: rgba(10,10,120,0.05); border-left-color: var(--navy); }
+  .callout-navy p { font-style: normal; }
+
+  ul.check-list { list-style: none; padding: 0; margin: 20px 0; }
+  ul.check-list li { font-size: 15px; line-height: 1.7; padding: 10px 0 10px 24px; border-bottom: 1px solid rgba(0,0,0,0.06); position: relative; color: var(--text); }
+  ul.check-list li:last-child { border-bottom: none; }
+  ul.check-list li::before { content: '→'; position: absolute; left: 0; color: var(--magenta); font-weight: 700; }
+
+  /* SELF ASSESSMENT STAGES */
+  .assessment-stages { margin: 28px 0; }
+  .assessment-stage { padding: 24px 28px; margin-bottom: 3px; }
+  .assessment-stage-1 { background: var(--off-white); border-left: 4px solid var(--light-grey); }
+  .assessment-stage-2 { background: rgba(229,0,125,0.07); border-left: 4px solid var(--magenta); }
+  .assessment-stage-3 { background: rgba(10,10,120,0.05); border-left: 4px solid var(--navy); }
+  .assessment-stage h4 { margin: 0 0 12px 0; color: var(--navy); }
+  .assessment-stage-1 h4 { color: #666; }
+  .assessment-stage ul { list-style: none; padding: 0; }
+  .assessment-stage ul li { font-size: 14px; line-height: 1.65; padding: 5px 0 5px 16px; position: relative; color: #555; }
+  .assessment-stage ul li::before { content: '·'; position: absolute; left: 0; color: var(--magenta); font-size: 18px; line-height: 1; }
+
+  /* FRAMING EXAMPLES */
+  .framing-group { margin: 28px 0; }
+  .framing-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--magenta); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--magenta); }
+  .framing-pair { display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: start; margin-bottom: 16px; }
+  .framing-x { font-size: 18px; color: #cc3300; font-weight: 700; padding-top: 2px; }
+  .framing-check { font-size: 18px; color: #3a7a00; font-weight: 700; padding-top: 2px; }
+  .framing-text-bad { font-size: 15px; color: #666; line-height: 1.5; font-style: italic; }
+  .framing-text-good { font-size: 15px; color: #2a5a00; line-height: 1.5; }
+
+  /* CHECKLIST GRID */
+  .checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+  .checklist-col h4 { color: var(--navy); margin-top: 0; }
+
+  /* VALUES CIRCLE */
+  .circle-structure { background: var(--navy); padding: 40px 48px; margin: 28px 0; }
+  .circle-steps { list-style: none; padding: 0; }
+  .circle-steps li { display: flex; gap: 20px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .circle-steps li:last-child { border-bottom: none; }
+  .circle-step-num { width: 36px; height: 36px; background: var(--magenta); display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 16px; color: var(--white); flex-shrink: 0; }
+  .circle-step-text h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 15px; color: var(--white); margin: 0 0 6px 0; }
+  .circle-step-text p { font-size: 14px; color: rgba(255,255,255,0.7); margin: 0; line-height: 1.6; }
+
+  /* METRICS */
+  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin: 28px 0; }
+  .metric-card { padding: 28px 24px; }
+  .metric-card:nth-child(odd) { background: var(--off-white); }
+  .metric-card:nth-child(even) { background: rgba(229,0,125,0.07); }
+  .metric-card h4 { color: var(--magenta); margin-top: 0; margin-bottom: 10px; }
+  .metric-card p { font-size: 14px; color: #555; margin: 0; line-height: 1.65; }
+
+  .nav-footer { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--light-grey); display: flex; justify-content: space-between; }
+  .btn { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px 28px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+  .btn-magenta { background: var(--magenta); color: var(--white); }
+  .btn-magenta:hover { background: var(--navy); }
+  .btn-outline { background: transparent; color: var(--navy); border: 2px solid var(--navy); }
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+  footer { background: #070740; padding: 48px 64px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 12px; color: var(--white); text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; }
+  .footer-logo span { color: var(--magenta); }
+  .footer-mid { font-size: 12px; color: rgba(255,255,255,0.4); text-align: center; line-height: 1.7; }
+  .footer-mid a { color: var(--lime); text-decoration: none; }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-links a { font-size: 11px; color: rgba(255,255,255,0.35); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; }
+  .footer-links a:hover { color: var(--white); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Values-aware <span>journalism</span></a>
+  <ul class="nav-links">
+    <li><a href="vaj_introduction.html">Introduction</a></li>
+    <li><a href="vaj_framework.html">The Framework</a></li>
+    <li><a href="vaj_apply.html">Apply It</a></li>
+    <li><a href="vaj_tools.html" class="active">Practical Tools</a></li>
+    <li><a href="vaj_resources.html">Resources</a></li>
+    <li><a href="Values%20aware%20journalism%20-%20A%20practical%20toolkit.pdf" class="nav-cta">Download PDF</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--lime); display: block; margin-bottom: 16px;">Part 6</span>
+    <h1>Practical Tools</h1>
+    <div class="hero-rule"></div>
+    <p>Seven ready-to-use tools for values-aware practice – from individual stories to newsroom culture.</p>
+  </div>
+</div>
+
+<div class="content-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-label">Seven tools</div>
+    <ul class="sidebar-links">
+      <li><a href="#tool-1" class="active">01 Self-assessment</a></li>
+      <li><a href="#tool-2">02 Story-level checklist</a></li>
+      <li><a href="#tool-3">03 Editorial meeting prompts</a></li>
+      <li><a href="#tool-4">04 Framing alternatives guide</a></li>
+      <li><a href="#tool-5">05 How to spot instrumental versus genuine values</a></li>
+      <li><a href="#tool-6">06 Building a values circle</a></li>
+      <li><a href="#tool-7">07 Measuring what matters</a></li>
+    </ul>
+    <hr style="border: none; border-top: 1px solid var(--light-grey); margin: 20px 0;">
+    <div class="sidebar-label">Next</div>
+    <ul class="sidebar-links">
+      <li><a href="vaj_resources.html">Resources →</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+
+    <!-- TOOL 1 -->
+    <div class="tool-section" id="tool-1">
+      <div class="tool-header">
+        <div class="tool-number">01</div>
+        <div class="tool-header-text">
+          <h2>Self-assessment</h2>
+          <p class="tool-subtitle">Understand your own values and where you sit on the three-stage framework</p>
+        </div>
+      </div>
+
+      <h3>Step 1: Reconnect with your own values</h3>
+      <p>Look at the Schwartz values map – available at commoncausefoundation.org. Identify your five most and five least important values. Notice where they sit. Do they lean more toward intrinsic (Benevolence, Universalism, Self-direction) or extrinsic (Power, Achievement)?</p>
+      <div class="callout callout-lime">
+        <p>Questions to explore: What values drew you to journalism originally? What matters most to you about your work? When does your work feel most meaningful? When do you notice a gap between your own values and what you are being asked to do?</p>
+      </div>
+
+      <h3>Step 2: Assess your current stage</h3>
+      <p>Read through these indicators and consider honestly where most of your current practice sits. Most journalists recognise themselves most strongly in Stage 1 or early Stage 2 – this reflects the professional environment, not a personal failure.</p>
+
+      <div class="assessment-stages">
+        <div class="assessment-stage assessment-stage-1">
+          <h4>Stage 1 indicators</h4>
+          <ul>
+            <li>Your instinct is that good journalism means reporting facts and keeping yourself out of it</li>
+            <li>You haven't thought much about values – your own, your organisation's, or those embedded in professional norms</li>
+            <li>You tend to follow established conventions about how stories are told without questioning them</li>
+            <li>You haven't noticed consistent patterns in how your coverage foregrounds certain values over others</li>
+          </ul>
+        </div>
+        <div class="assessment-stage assessment-stage-2">
+          <h4>Stage 2 indicators</h4>
+          <ul>
+            <li>You recognise that all journalism involves values choices</li>
+            <li>You notice patterns in coverage, including your own and others'</li>
+            <li>You question inherited conventions and are seeking more alignment between your values and your practice</li>
+            <li>You are aware of the perception gap and the media's role in it</li>
+          </ul>
+        </div>
+        <div class="assessment-stage assessment-stage-3">
+          <h4>Stage 3 indicators</h4>
+          <ul>
+            <li>You explicitly name values in your work and are transparent with audiences about your editorial approach</li>
+            <li>You actively consider values in editorial decisions</li>
+            <li>Your stated values match your actual practice</li>
+            <li>You take active steps to close the perception gap</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Step 3: Identify your next step</h3>
+      <p><strong>At Stage 1:</strong> Begin noticing values in your work and other people's. For each story, ask: what values might this framing foreground?</p>
+      <p><strong>At Stage 2:</strong> Deepen your understanding of your own values and your organisation's. Connect with others. Experiment with different frames.</p>
+      <p><strong>At Stage 3:</strong> Deepen transparency practices. Seek greater alignment between personal, editorial and organisational values. Build and share evidence of the difference values-aware journalism makes.</p>
+    </div>
+
+    <!-- TOOL 2 -->
+    <div class="tool-section" id="tool-2">
+      <div class="tool-header">
+        <div class="tool-number">02</div>
+        <div class="tool-header-text">
+          <h2>Story-level checklist</h2>
+          <p class="tool-subtitle">A before, during and after guide for individual stories</p>
+        </div>
+      </div>
+
+      <div class="checklist-grid">
+        <div class="checklist-col">
+          <h4>Before reporting – framing</h4>
+          <ul class="check-list">
+            <li>How do my own values relate to this story – am I conscious of them?</li>
+            <li>What values might different frames for this story foreground?</li>
+            <li>Am I defaulting to wealth/achievement/power framing when other frames might serve better?</li>
+            <li>Am I assuming my sources or audiences are primarily motivated by self-interest?</li>
+          </ul>
+        </div>
+        <div class="checklist-col">
+          <h4>Before reporting – sourcing</h4>
+          <ul class="check-list">
+            <li>Who is most directly affected by this issue?</li>
+            <li>Am I treating affected people as active voices, or primarily as illustrative background?</li>
+            <li>Am I defaulting to institutional spokespeople?</li>
+            <li>What do people actually value about this issue, versus what I assume?</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>During reporting – ask sources</h4>
+      <ul class="check-list">
+        <li>Ask about their values as well as their positions: "What matters most to you about this?" or "What do you hope happens here?". Listen for what people care about – you may find it differs from what institutional framings suggest.</li>
+        <li>Consider whether solution-focused or community-oriented angles are relevant to this story, as options that may reflect the fuller picture or information that is most important or useful for the audience.</li>
+        <li>If there is evidence of collective action, cooperation or community response, ask whether it belongs in the story.</li>
+      </ul>
+
+      <h4>In writing – language</h4>
+      <ul class="check-list">
+        <li>Am I using "taxpayers" when "residents" or "community members" is more accurate?</li>
+        <li>Am I framing costs before human or environmental impact?</li>
+        <li>Am I treating people primarily as economic actors when other aspects of their experience are more relevant?</li>
+      </ul>
+
+      <h4>In writing – structure</h4>
+      <ul class="check-list">
+        <li>Do I lead with the values most relevant to the story, or with the frame that came pre-packaged from a press release?</li>
+        <li>Are the voices of those most affected given genuine prominence, or do they appear late as context?</li>
+        <li>If community action or cooperation is part of this story, is it treated as a core part, rather than a minor or token element?</li>
+      </ul>
+
+      <h4>After publication</h4>
+      <ul class="check-list">
+        <li>What values did this story foreground? Did that feel intentional?</li>
+        <li>Did this story make the perception gap wider or narrower?</li>
+        <li>What feedback did you receive from audiences, sources, colleagues?</li>
+        <li>What would you do differently next time?</li>
+      </ul>
+    </div>
+
+    <!-- TOOL 3 -->
+    <div class="tool-section" id="tool-3">
+      <div class="tool-header">
+        <div class="tool-number">03</div>
+        <div class="tool-header-text">
+          <h2>Editorial meeting prompts</h2>
+          <p class="tool-subtitle">Questions for pitch meetings and planning discussions</p>
+        </div>
+      </div>
+
+      <h4>For editorial meetings</h4>
+      <ul class="check-list">
+        <li>What values does each potential angle for this story foreground?</li>
+        <li>Are we defaulting to our usual frame and is there a reason to?</li>
+        <li>What angles might connect to what truly matters to people on this issue?</li>
+        <li>Are we using values honestly, or mainly to achieve a particular effect?</li>
+      </ul>
+
+      <h4>For planning discussions</h4>
+      <ul class="check-list">
+        <li>What patterns dominate our recent coverage in this area?</li>
+        <li>Are there angles we consistently miss that would reflect more of what our audiences actually care about?</li>
+        <li>What community relationships would strengthen our reporting here?</li>
+        <li>Are we unconsciously foregrounding extrinsic values in our coverage of this area?</li>
+      </ul>
+    </div>
+
+    <!-- TOOL 4 -->
+    <div class="tool-section" id="tool-4">
+      <div class="tool-header">
+        <div class="tool-number">04</div>
+        <div class="tool-header-text">
+          <h2>Framing alternatives guide</h2>
+          <p class="tool-subtitle">Concrete examples of how common frames can be rebalanced</p>
+        </div>
+      </div>
+
+      <p>This guide is not arguing that economic, security or achievement framing is wrong – these are legitimate parts of reporting. The aim is to help journalists notice a possible default bias towards these frames, and to consider what a fuller picture could look like.</p>
+
+      <div class="framing-group">
+        <div class="framing-label">Wealth → Human, societal and environmental impact</div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"Rail strikes cost UK economy £X million a day"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">Stories focusing on patients, carers and commuters; features on rail workers' motivations and working conditions</div>
+        </div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"Trees worth £X billion to economy"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"Communities across UK coming together to protect local woodland" / "Why young people are demanding action on climate change"</div>
+        </div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"Migrants contribute £X billion to UK economy"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"New residents bring creativity, care and community connections to [place]" / "Families separated by immigration system share their stories"</div>
+        </div>
+      </div>
+
+      <div class="framing-group">
+        <div class="framing-label">Power and authority → Equality, social justice and community</div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"Minister announces new housing targets"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"Tenants respond to proposed housing changes: 'We need homes, not investment vehicles'" / "What renters and first-time buyers want from housing policy"</div>
+        </div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"Police chief announces crackdown on antisocial behaviour"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"Community explores root causes of youth crime" / "How restorative justice brought victim and offender together"</div>
+        </div>
+      </div>
+
+      <div class="framing-group">
+        <div class="framing-label">Individual achievement → Collective action and shared success</div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"School tops league tables again"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"How schools across the city are sharing best practices to lift all students"</div>
+        </div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"PM wins debate, poll shows"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"What did we learn about parties' policies on the NHS?"</div>
+        </div>
+      </div>
+
+      <div class="framing-group">
+        <div class="framing-label">Wealth → Human, societal and environmental impact (continued)</div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"Arts funding provides £5 return for every £1 spent"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"How community theatre brings neighbours together" / "Why creativity matters for wellbeing"</div>
+        </div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"Ageing population will cost NHS £X billion"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"How communities are supporting elderly neighbours" / "What does dignified ageing look like?"</div>
+        </div>
+      </div>
+
+      <div class="framing-group">
+        <div class="framing-label">Power and authority → Equality, social justice and community (continued)</div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"Ofsted rates school 'inadequate'"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"Teachers, parents, students share what makes good education" / "How one school put wellbeing before test scores"</div>
+        </div>
+      </div>
+
+      <div class="framing-group">
+        <div class="framing-label">Public status and social image → Self-direction and equality</div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"University league tables: Top 10 for graduate salaries"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"Students share what really matters when choosing university"</div>
+        </div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"30 under 30: Young entrepreneurs to watch"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"What motivates people beyond salary and status?"</div>
+        </div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"UK's most desirable postcodes revealed"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"What makes a good neighbourhood? Residents weigh in"</div>
+        </div>
+      </div>
+
+      <div class="framing-group">
+        <div class="framing-label">Individual achievement → Collective action and shared success (continued)</div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">Focus solely on individual star players</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"How team's collective approach led to success"</div>
+        </div>
+      </div>
+
+      <div class="framing-group">
+        <div class="framing-label">Security and threat → Root causes and collective response</div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"Residents terrified as knife crime spikes"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"Community explores what would make neighbourhood safer" / "Youth workers on what young people need"</div>
+        </div>
+
+        <div class="framing-pair">
+          <div class="framing-x">✕</div>
+          <div class="framing-text-bad">"Border crisis: Illegal crossings surge"</div>
+        </div>
+        <div class="framing-pair">
+          <div class="framing-check">✓</div>
+          <div class="framing-text-good">"What drives people to make dangerous journeys? Refugees share their stories" / "How coastal communities are responding to new arrivals"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOL 5 -->
+    <div class="tool-section" id="tool-5">
+      <div class="tool-header">
+        <div class="tool-number">05</div>
+        <div class="tool-header-text">
+          <h2>Spotting instrumental vs genuine uses of values</h2>
+          <p class="tool-subtitle">How to tell when values are used honestly or to influence outcomes</p>
+        </div>
+      </div>
+
+      <p>Use these questions to assess whether values are being used authentically – in your own work, or when analysing others'.</p>
+
+      <h4>Is intrinsic values language being used to achieve extrinsic goals?</h4>
+      <ul class="check-list">
+        <li>Is values language mainly used in branding or headlines, while the actual journalism tells a different story?</li>
+        <li>Is there a gap between the communities mentioned in an outlet's claims about values and those genuinely represented in the reporting?</li>
+        <li>Are these values being highlighted more to support commercial or reputational goals than to reflect how the journalism is actually produced?</li>
+        <li>Would the same editorial decisions be made if the values framing was removed?</li>
+      </ul>
+
+      <h4>Does the work use extrinsic framing to serve intrinsic goals?</h4>
+      <ul class="check-list">
+        <li>Is an economic argument used to justify something the journalist in fact judges to be important for reasons of care, equality or community?</li>
+        <li>Does the framing suggest the subject only matters if it's economically useful, rather than valuable in its own right?</li>
+        <li>Is there a gap between the evident motivation behind the story and the frame used to tell it?</li>
+      </ul>
+
+      <h4>Is this authentic?</h4>
+      <ul class="check-list">
+        <li>Does the editorial practice reflect the stated values across coverage over time, not just in one story?</li>
+        <li>Are communities invoked in values statements genuinely present in the journalism, as active voices rather than illustrative examples?</li>
+        <li>Is there evidence of genuine discomfort or self-questioning when practice falls short of stated values?</li>
+        <li>Is there transparency about the tensions between values and commercial or editorial pressures?</li>
+      </ul>
+
+      <div class="callout">
+        <p>The most useful question to sit with is the last one in each section. Authentic values practice rarely claims perfection – it acknowledges difficulty and stays honest about it.</p>
+      </div>
+    </div>
+
+    <!-- TOOL 6 -->
+    <div class="tool-section" id="tool-6">
+      <div class="tool-header">
+        <div class="tool-number">06</div>
+        <div class="tool-header-text">
+          <h2>Building a values circle</h2>
+          <p class="tool-subtitle">A structure for peer support and ongoing reflection</p>
+        </div>
+      </div>
+
+      <p>A values circle is a small group (three to six people) of journalists who meet regularly to explore values in their work, share challenges and strategies, and support each other's growth. It is a community of practice, not a training programme.</p>
+
+      <h4>How to start</h4>
+      <p>Find colleagues in your organisation, freelancers in your professional network, journalists at other outlets doing similar work. A mix of roles, experience and backgrounds is helpful. Meet regularly, create a space for honest reflection without judgement, and maintain confidentiality about what is shared.</p>
+
+      <div class="circle-structure">
+        <ul class="circle-steps">
+          <li>
+            <div class="circle-step-num">1</div>
+            <div class="circle-step-text">
+              <h4>Check-in</h4>
+              <p>How is each person feeling about the alignment between their own values and the work they are doing?</p>
+            </div>
+          </li>
+          <li>
+            <div class="circle-step-num">2</div>
+            <div class="circle-step-text">
+              <h4>Deep dive</h4>
+              <p>One person brings a challenge, question or story for the group to explore together.</p>
+            </div>
+          </li>
+          <li>
+            <div class="circle-step-num">3</div>
+            <div class="circle-step-text">
+              <h4>Close</h4>
+              <p>What is each person taking away?</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TOOL 7 -->
+    <div class="tool-section" id="tool-7">
+      <div class="tool-header">
+        <div class="tool-number">07</div>
+        <div class="tool-header-text">
+          <h2>Measuring what matters</h2>
+          <p class="tool-subtitle">How to track the impact of values-aware stories</p>
+        </div>
+      </div>
+
+      <p>Traditional metrics – reach, clicks, shares – don't capture what values-aware journalism offers. The journalism industry is already moving toward richer measures of engagement, loyalty and impact. Values-aware journalism is aligned with these shifts.</p>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <h4>Community feedback</h4>
+          <p>Do communities feel accurately represented and heard? Are relationships with sources and communities deepening over time?</p>
+        </div>
+        <div class="metric-card">
+          <h4>Quality of engagement</h4>
+          <p>Is your journalism prompting thoughtful conversation? Are audiences returning? Is your work being shared beyond its usual audience?</p>
+        </div>
+        <div class="metric-card">
+          <h4>Empowerment and participation</h4>
+          <p>Has your journalism helped people understand an issue better and act on things they care about? Has it contributed to community initiatives or civic participation?</p>
+        </div>
+        <div class="metric-card">
+          <h4>Staff alignment and wellbeing</h4>
+          <p>Do journalists feel greater alignment between their own values and their work? Does this affect their sense of purpose day to day?</p>
+        </div>
+        <div class="metric-card">
+          <h4>Coverage patterns</h4>
+          <p>Are you noticing a shift in the balance of values your coverage foregrounds over time? Is content more accurately reflecting what most people prioritise?</p>
+        </div>
+        <div class="metric-card">
+          <h4>Source relationships</h4>
+          <p>Do sources return? Are new voices – particularly those from communities not usually centred – starting to engage with your journalism?</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-footer">
+      <a href="vaj_apply.html" class="btn btn-outline">← Apply It</a>
+      <a href="vaj_resources.html" class="btn btn-magenta">Next: Resources →</a>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <a href="https://commoncausefoundation.org" target="_blank" class="footer-logo" style="text-decoration:none;display:block;flex-shrink:0;"><img src="CCFoundation_MainVersion_White.png" alt="Common Cause Foundation" style="height:48px;width:auto;display:block;"></a>
+  <div class="footer-mid">A project of <a href="https://commoncausefoundation.org">Common Cause Foundation</a><br>valuesawarejournalism.org · CC BY-NC 4.0</div>
+  <div class="footer-links"><a href="vaj_introduction.html">About</a><a href="vaj_resources.html#get-in-touch">Contact</a><a href="https://www.linkedin.com/company/common-cause-foundation" target="_blank">LinkedIn</a><a href="https://bsky.app/profile/commoncause.bsky.social" target="_blank">Bluesky</a></div>
+</footer>
+
+</body>
+</html>

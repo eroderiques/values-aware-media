@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The framework | Values-aware journalism</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --navy: #0A0A78; --magenta: #E5007D; --lime: #C8E000; --white: #ffffff; --off-white: #F7F7F2; --light-grey: #EBEBEB; --text: #333333; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Open Sans', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+
+  nav { background: var(--navy); padding: 0 64px; display: flex; align-items: center; justify-content: space-between; height: 68px; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 13px; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none !important; }
+  .nav-logo span { color: var(--magenta); }
+  .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+  .nav-links a { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); }
+  .nav-cta { background: var(--magenta); color: var(--white) !important; padding: 10px 22px; }
+
+  .page-hero { background: var(--navy); padding: 80px 64px; position: relative; overflow: hidden; }
+  .page-hero::after { content: ''; position: absolute; bottom: 0; right: 0; width: 260px; height: 260px; background: var(--magenta); clip-path: polygon(100% 0, 0 100%, 100% 100%); opacity: 0.5; }
+  .page-hero-inner { position: relative; z-index: 2; max-width: 800px; }
+  .section-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; display: block; margin-bottom: 16px; }
+  .page-hero h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(36px, 5vw, 60px); color: var(--white); line-height: 1.05; margin-bottom: 24px; }
+  .hero-rule { width: 64px; height: 4px; background: var(--lime); margin: 24px 0; }
+  .page-hero p { font-size: 19px; line-height: 1.75; color: rgba(255,255,255,0.8); max-width: 620px; }
+
+  .content-wrap { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+
+  .sidebar { background: var(--off-white); padding: 48px 32px; border-right: 1px solid var(--light-grey); position: sticky; top: 68px; height: calc(100vh - 68px); overflow-y: auto; }
+  .sidebar-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #999; margin-bottom: 16px; }
+  .sidebar-links { list-style: none; }
+  .sidebar-links li { margin-bottom: 4px; }
+  .sidebar-links a { font-size: 13px; font-weight: 600; color: #666; text-decoration: none; display: block; padding: 6px 12px; border-left: 3px solid transparent; transition: all 0.15s; line-height: 1.4; }
+  .sidebar-links a:hover { color: var(--navy); border-left-color: var(--navy); background: rgba(10,10,120,0.04); }
+  .sidebar-links a.active { color: var(--navy); border-left-color: var(--magenta); font-weight: 700; }
+
+  .main-content { padding: 64px 80px; max-width: 860px; }
+
+  h2 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 32px; color: var(--navy); line-height: 1.15; margin-bottom: 20px; margin-top: 64px; }
+  h2:first-child { margin-top: 0; }
+  h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 20px; color: var(--navy); margin-bottom: 16px; margin-top: 40px; line-height: 1.3; }
+  h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; color: var(--navy); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; margin-top: 28px; }
+  p { font-size: 16px; line-height: 1.85; color: var(--text); margin-bottom: 20px; }
+
+  .callout { border-left: 4px solid var(--magenta); padding: 20px 24px; background: var(--off-white); margin: 32px 0; }
+  .callout p { font-size: 15px; font-style: italic; color: var(--navy); line-height: 1.65; margin: 0; }
+  .callout-lime { background: rgba(200,224,0,0.15); border-left-color: var(--lime); }
+  .callout-navy { background: rgba(10,10,120,0.05); border-left-color: var(--navy); }
+  .callout-navy p { font-style: normal; font-weight: 600; }
+  .callout-example { background: rgba(229,0,125,0.06); border-left-color: var(--magenta); }
+  .callout-example .example-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--magenta); margin-bottom: 12px; }
+  .callout-example p { font-style: normal; font-size: 15px; color: var(--text); }
+
+  .values-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin: 32px 0; }
+  .values-card { padding: 32px 28px; }
+  .values-intrinsic { background: rgba(200,224,0,0.2); border-top: 3px solid var(--lime); }
+  .values-extrinsic { background: rgba(10,10,120,0.06); border-top: 3px solid var(--navy); }
+  .values-card h4 { color: var(--navy); margin-top: 0; }
+  .values-intrinsic h4 { color: #4a6600; }
+  .values-card p { font-size: 14px; color: #555; margin: 0; line-height: 1.7; }
+
+  .stages-overview { margin: 40px 0; }
+  .stage-row { display: flex; align-items: stretch; margin-bottom: 3px; }
+  .stage-num-block { width: 64px; display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 28px; color: var(--white); flex-shrink: 0; }
+  .stage-row:nth-child(1) .stage-num-block { background: var(--light-grey); color: rgba(10,10,120,0.3); }
+  .stage-row:nth-child(2) .stage-num-block { background: var(--magenta); }
+  .stage-row:nth-child(3) .stage-num-block { background: var(--navy); }
+  .stage-content { padding: 24px 28px; flex: 1; }
+  .stage-row:nth-child(1) .stage-content { background: var(--off-white); }
+  .stage-row:nth-child(2) .stage-content { background: rgba(229,0,125,0.08); }
+  .stage-row:nth-child(3) .stage-content { background: rgba(10,10,120,0.06); }
+  .stage-content h4 { margin: 0 0 4px 0; font-size: 16px; }
+  .stage-content p { margin: 0; font-size: 13px; color: #666; font-style: italic; }
+
+  .stage-detail { background: var(--off-white); padding: 48px; margin: 40px 0; border-top: 4px solid var(--light-grey); }
+  .stage-detail.stage-2 { border-top-color: var(--magenta); background: rgba(229,0,125,0.05); }
+  .stage-detail.stage-3 { border-top-color: var(--navy); background: rgba(10,10,120,0.04); }
+  .stage-detail-header { display: flex; align-items: flex-start; gap: 24px; margin-bottom: 32px; }
+  .stage-big-num { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 72px; line-height: 1; color: rgba(10,10,120,0.1); flex-shrink: 0; }
+  .stage-detail.stage-2 .stage-big-num { color: rgba(229,0,125,0.2); }
+  .stage-detail.stage-3 .stage-big-num { color: rgba(10,10,120,0.15); }
+  .stage-detail h3 { margin: 0 0 8px 0; font-size: 24px; }
+  .stage-quote { font-size: 14px; font-style: italic; color: #888; margin: 0; }
+
+  ul.check-list { list-style: none; padding: 0; margin: 20px 0; }
+  ul.check-list li { font-size: 15px; line-height: 1.7; padding: 8px 0 8px 24px; border-bottom: 1px solid rgba(0,0,0,0.06); position: relative; color: var(--text); }
+  ul.check-list li::before { content: '→'; position: absolute; left: 0; color: var(--magenta); font-weight: 700; }
+
+  .path-block { padding: 28px 32px; margin-bottom: 3px; }
+  .path-a { background: rgba(229,0,125,0.07); border-left: 4px solid var(--magenta); }
+  .path-b { background: rgba(10,10,120,0.05); border-left: 4px solid var(--navy); }
+  .path-block h4 { font-size: 13px; margin-top: 0; margin-bottom: 12px; }
+  .path-a h4 { color: var(--magenta); }
+  .path-b h4 { color: var(--navy); }
+  .path-block p { font-size: 15px; line-height: 1.75; margin-bottom: 12px; }
+  .path-block p:last-child { margin-bottom: 0; }
+
+  .sub-path { background: rgba(255,255,255,0.7); border-left: 3px solid rgba(0,0,0,0.1); padding: 16px 20px; margin: 16px 0; }
+  .sub-path h5 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .sub-path p { font-size: 14px; line-height: 1.7; margin: 0; color: #555; }
+
+  .approach-block { background: var(--off-white); border-left: 4px solid var(--navy); padding: 28px 32px; margin-bottom: 3px; }
+  .approach-block.ap-magenta { border-left-color: var(--magenta); }
+  .approach-block.ap-lime { border-left-color: var(--lime); }
+  .approach-block h4 { margin-top: 0; margin-bottom: 12px; }
+  .approach-block p { font-size: 15px; line-height: 1.75; margin-bottom: 12px; }
+  .approach-block p:last-child { margin-bottom: 0; }
+
+  .outlet-example { background: white; border-left: 3px solid var(--magenta); padding: 20px 24px; margin: 16px 0; }
+  .outlet-example h5 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; color: var(--magenta); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .outlet-example p { font-size: 14px; line-height: 1.7; color: #555; margin: 0; }
+
+  .challenges-block { background: rgba(255,255,255,0.6); border: 1px solid var(--light-grey); padding: 24px 28px; margin-bottom: 3px; }
+  .challenges-block h5 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--navy); margin-bottom: 10px; }
+  .challenges-block p { font-size: 14px; line-height: 1.7; margin: 0; color: #555; }
+
+  .patterns-table { width: 100%; border-collapse: collapse; margin: 32px 0; font-size: 14px; }
+  .patterns-table th { background: var(--navy); color: var(--white); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 16px 20px; text-align: left; }
+  .patterns-table td { padding: 16px 20px; border-bottom: 1px solid var(--light-grey); vertical-align: top; line-height: 1.65; color: var(--text); }
+  .patterns-table tr:nth-child(even) td { background: var(--off-white); }
+  .patterns-table .value-name { font-family: 'Montserrat', sans-serif; font-weight: 700; color: var(--magenta); font-size: 13px; }
+  .patterns-table .alt-text { color: #3a7a00; font-style: italic; }
+
+  .nav-footer { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--light-grey); display: flex; justify-content: space-between; }
+  .btn { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px 28px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+  .btn-magenta { background: var(--magenta); color: var(--white); }
+  .btn-magenta:hover { background: var(--navy); }
+  .btn-outline { background: transparent; color: var(--navy); border: 2px solid var(--navy); }
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+  footer { background: #070740; padding: 48px 64px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 12px; color: var(--white); text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; }
+  .footer-logo span { color: var(--magenta); }
+  .footer-mid { font-size: 12px; color: rgba(255,255,255,0.4); text-align: center; line-height: 1.7; }
+  .footer-mid a { color: var(--lime); text-decoration: none; }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-links a { font-size: 11px; color: rgba(255,255,255,0.35); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; }
+  .footer-links a:hover { color: var(--white); }
+
+  .numbered-list { margin: 32px 0; }
+  .numbered-item { display: grid; grid-template-columns: 48px 1fr; gap: 20px; align-items: start; padding: 20px 0; border-bottom: 1px solid var(--light-grey); }
+  .numbered-item:last-child { border-bottom: none; }
+  .num-circle { width: 40px; height: 40px; background: var(--magenta); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 16px; color: var(--white); flex-shrink: 0; }
+  .num-circle.navy { background: var(--navy); }
+  .numbered-item h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 15px; color: var(--navy); margin: 0 0 8px 0; text-transform: none; letter-spacing: 0; }
+  .numbered-item p { font-size: 15px; line-height: 1.75; color: var(--text); margin: 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Values-aware <span>journalism</span></a>
+  <ul class="nav-links">
+    <li><a href="vaj_introduction.html">Introduction</a></li>
+    <li><a href="vaj_framework.html" class="active">The framework</a></li>
+    <li><a href="vaj_apply.html">Apply It</a></li>
+    <li><a href="vaj_tools.html">Practical Tools</a></li>
+    <li><a href="vaj_resources.html">Resources</a></li>
+    <li><a href="Values%20aware%20journalism%20-%20A%20practical%20toolkit.pdf" class="nav-cta">Download PDF</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span class="section-label" style="color: var(--lime)">Parts 1–4</span>
+    <h1>The framework</h1>
+    <div class="hero-rule"></div>
+    <p>From understanding how values work to three stages of values awareness – a framework for becoming a more conscious, transparent journalist.</p>
+  </div>
+</div>
+
+<div class="content-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-label">On this page</div>
+    <ul class="sidebar-links">
+      <li><a href="#what-are-values" class="active">What we mean by values</a></li>
+      <li><a href="#how-values-work">How values work</a></li>
+      <li><a href="#perception-gap">The perception gap</a></li>
+      <li><a href="#objectivity">Values &amp; objectivity</a></li>
+      <li><a href="#patterns">Patterns in UK media</a></li>
+      <li><a href="#your-context">Your context</a></li>
+      <li><a href="#three-stages">Three stages at a glance</a></li>
+      <li><a href="#stage-1">Stage 1</a></li>
+      <li><a href="#stage-2">Stage 2</a></li>
+      <li><a href="#stage-3">Stage 3</a></li>
+    </ul>
+    <hr style="border: none; border-top: 1px solid var(--light-grey); margin: 20px 0;">
+    <div class="sidebar-label">Next</div>
+    <ul class="sidebar-links">
+      <li><a href="vaj_apply.html">Apply It →</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+
+    <!-- PART 1 -->
+    <h2 id="what-are-values">Part 1: Understanding values in journalism</h2>
+    <p>In social psychology, values are <strong>deeply held guiding principles that shape our attitudes and behaviours, and which are, in turn, shaped by the world around us.</strong> We can think of values as an internal compass that influences what we pay attention to, what we care about and how we treat others.</p>
+
+    <div class="callout callout-navy">
+      <p><strong>The Schwartz Values Framework</strong></p><br>
+      <p>One of the most widely used frameworks for understanding values comes from the social psychologist Shalom Schwartz, whose research drew on data from people in nearly 100 countries. Schwartz identified a set of seemingly 'universal' human values – things like benevolence, equality, achievement, security, creativity and power – that are held across many different cultures, though in different proportions. Crucially, we can all access all of these values, but what feels most meaningful to us at any moment is influenced by our environment – including what we read, watch and listen to.</p>
+    </div>
+
+    <div style="margin: 40px 0;">
+      <img src="schwartz_values_map.png" alt="Schwartz Values Map" style="width: 100%; max-width: 760px; display: block; margin: 0 auto; border: 1px solid #EBEBEB;">
+      <p style="font-size: 13px; color: #888; text-align: center; margin-top: 12px;">Redrawn with permission from Schwartz, S.H. (2006). <a href="vaj_resources.html" style="color: #0A0A78;">Full references in Resources.</a></p>
+    </div>
+
+    <p>A 2025 study analysing half a million Facebook posts about COVID-19 from a range of Romanian and UK news outlets found that values references were present across all coverage. Journalism is not values neutral. Every editorial decision – which issues get covered, how headlines are written, whose voices lead, what images accompany text – involves a judgement about what matters. Those judgments are shaped by values, whether they are the journalist's own, embedded in the outlet's culture, assumptions about the audience, or arising from commercial needs. All of these editorial decisions send signals about what matters in the world and what people should care about.</p>
+
+    <p>Journalism scholars Claudia Mellado and Constanza Gajardo found a significant gap between what journalists assume people want from them and what audiences themselves emphasise. Journalists highlighted objectivity, independence and accuracy, while audiences wanted approachability, empathy and the ability to communicate in ways that emotionally resonate. Audiences described these as relational, humanistic qualities. This mirrors what Common Cause Foundation's own research consistently finds. People care far more about connection, care and community than the media tends to assume or reflect.</p>
+
+    <!-- PART 1: HOW VALUES WORK -->
+    <h2 id="how-values-work">How values work</h2>
+    <p>It's hard to hold strongly opposing values at the same time. This is especially true of intrinsic and extrinsic values, which exist in a kind of tension.</p>
+
+    <div class="values-compare">
+      <div class="values-card values-intrinsic">
+        <h4>Intrinsic values</h4>
+        <p>Inherently rewarding. They include: equality, social justice, interconnectedness with nature, creativity, curiosity, freedom and self-direction.</p>
+      </div>
+      <div class="values-card values-extrinsic">
+        <h4>Extrinsic values</h4>
+        <p>Depend on external approval. They include: wealth, power, social status, achievement, public image and authority.</p>
+      </div>
+    </div>
+
+    <p>Research by a number of psychologists has found that everyone naturally holds both intrinsic and extrinsic values, but when extrinsic values are made more prominent in a person's mind, it temporarily suppresses intrinsic ones, and vice versa. We call this the 'seesaw effect'. So when values on one end of the spectrum are elevated, those on the other side are diminished.</p>
+    <p>Part of why this happens is psychological. Extrinsic values align with deep survival instincts – we are wired to notice threats and seek rewards. Negative news, wealth narratives and power dynamics easily tap into these instincts.</p>
+    <p>Psychologists Kennon Sheldon and Tim Kasser found that when people feel like they're psychologically threatened – whether by existential, economic or social threat – they shift toward prioritising extrinsic goals, like wealth, status or appearance, over intrinsic ones, like community or personal growth. This reflects something real about human attention and it means that extrinsic framings will often find a ready audience, which can reinforce their dominance without anyone consciously choosing that outcome.</p>
+
+    <div class="callout callout-example">
+      <div class="example-label">Example</div>
+      <p>A headline frames NHS staffing shortages as "costing taxpayers £X billion" rather than highlighting patient care or staff wellbeing. The implicit message? Economic value matters most. And repeated enough, across enough outlets, this framing shapes what feels like the 'obvious way' to cover health issues.</p>
+    </div>
+
+    <p>The problem isn't economics itself, it's when economic framing becomes the default, crowding out other legitimate grounds for concern, such as human dignity, community, or the inherent value of life.</p>
+    <p>We can think of values like muscles – the more they are used, the stronger they become. The opposite is also true. Consistent exposure to extrinsic values normalises them, making it harder for people to access the intrinsic values that research shows most people hold. And, when the world around us seems to tell us that things like wealth and power matter most, something happens – we start to believe that other people care more about these things than they actually do.</p>
+
+    <!-- PERCEPTION GAP -->
+    <h2 id="perception-gap">The values we think other people prioritise – and why this matters</h2>
+    <p>When people believe that others are motivated by self-interest, they are less likely to get involved in their communities, more likely to feel isolated, are less trusting, less supportive of collective and environmental action and less likely to volunteer. In this way, the gap between what people value and what they believe others value erodes the fabric of society.</p>
+    <p>We do not yet have a comprehensive study of UK media content analysed using Schwartz's framework, something that would allow us to map coverage alongside the values most people hold. However, the existing evidence all points in the same direction. Decades of research on 'news values', effectively the professional criteria used to judge newsworthiness (timeliness, conflict, impact, prominence etc), has shown over time that conflict, money, power and threat consistently dominate story selection. These align closely with extrinsic values. Our own research found that most people see the media promoting extrinsic over intrinsic values too.</p>
+
+    <div class="callout callout-example">
+      <div class="example-label">Example</div>
+      <p>"Extinction Rebellion protestors have blocked a main route into Bristol that leads to the M32. Commuters faced long delays after the campaigners gathered at Cabot Circus amid a series of protests." Source: BBC</p>
+    </div>
+
+    <p>When a story about environmental protection is framed as good for business or not, and suggests this is what others care about too, this doesn't simply add context. It shifts the audience towards extrinsic values, making it harder for them to connect with the intrinsic reasons we care about nature, or nature's inherent worth.</p>
+
+    <!-- OBJECTIVITY -->
+    <h2 id="objectivity">Values awareness and objectivity</h2>
+    <p>Some journalists might question whether paying attention to values means abandoning objectivity or introducing bias. However, the selection and framing of facts is always informed by values – and there is nothing inherently wrong with that – it's impossible to avoid.</p>
+    <p>The question is whether that choice is made consciously or unconsciously, and whether it is transparent or hidden. A journalist who never considers the values in their choices is not more objective – they are simply less aware of the assumptions shaping their work, and arguably less 'objective' as a result.</p>
+    <p>We must also note that many people already feel that the news doesn't present things impartially. For example, research by the Reuters Institute drawing on focus groups with disadvantaged communities across the UK, US, Brazil and India found that women and people from lower socioeconomic groups show a clear preference for news that openly addresses their perspectives and experiences. This is because mainstream journalism has historically, if often unconsciously, reflected the viewpoints and interests of more privileged groups.</p>
+    <p>So-called neutral framing is rarely neutral when looking at whose experience it centres. Values awareness helps to make that visible.</p>
+
+    <div class="callout">
+      <p>"A journalist who never considers the values in their choices is not more objective – they are simply less aware of the assumptions shaping their work, and arguably less 'objective' as a result."</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin: 32px 0;">
+      <div style="background: rgba(229,0,125,0.08); border-top: 3px solid var(--magenta); padding: 28px;">
+        <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--magenta); margin: 0 0 16px 0;">Values awareness is not</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="font-size: 14px; line-height: 1.7; padding: 7px 0 7px 20px; border-bottom: 1px solid rgba(0,0,0,0.06); position: relative; color: #444;"><span style="position: absolute; left: 0; color: var(--magenta);">·</span>Imposing your politics on your audience</li>
+          <li style="font-size: 14px; line-height: 1.7; padding: 7px 0 7px 20px; border-bottom: 1px solid rgba(0,0,0,0.06); position: relative; color: #444;"><span style="position: absolute; left: 0; color: var(--magenta);">·</span>Abandoning facts or accuracy</li>
+          <li style="font-size: 14px; line-height: 1.7; padding: 7px 0 7px 20px; border-bottom: 1px solid rgba(0,0,0,0.06); position: relative; color: #444;"><span style="position: absolute; left: 0; color: var(--magenta);">·</span>Becoming an advocate for particular policies</li>
+          <li style="font-size: 14px; line-height: 1.7; padding: 7px 0 7px 20px; position: relative; color: #444;"><span style="position: absolute; left: 0; color: var(--magenta);">·</span>Choosing sides in partisan debates</li>
+        </ul>
+      </div>
+      <div style="background: rgba(10,10,120,0.05); border-top: 3px solid var(--navy); padding: 28px;">
+        <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--navy); margin: 0 0 16px 0;">Values awareness is</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="font-size: 14px; line-height: 1.7; padding: 7px 0 7px 20px; border-bottom: 1px solid rgba(0,0,0,0.06); position: relative; color: #444;"><span style="position: absolute; left: 0; color: var(--navy);">·</span>Recognising that all journalism involves values choices</li>
+          <li style="font-size: 14px; line-height: 1.7; padding: 7px 0 7px 20px; border-bottom: 1px solid rgba(0,0,0,0.06); position: relative; color: #444;"><span style="position: absolute; left: 0; color: var(--navy);">·</span>Making those choices intentional and transparent rather than unconscious or hidden</li>
+          <li style="font-size: 14px; line-height: 1.7; padding: 7px 0 7px 20px; border-bottom: 1px solid rgba(0,0,0,0.06); position: relative; color: #444;"><span style="position: absolute; left: 0; color: var(--navy);">·</span>Understanding the cultural footprint of your editorial decisions</li>
+          <li style="font-size: 14px; line-height: 1.7; padding: 7px 0 7px 20px; position: relative; color: #444;"><span style="position: absolute; left: 0; color: var(--navy);">·</span>More accurately reflecting the values that most people hold</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>As journalism scholars Bill Kovach and Tom Rosenstiel have argued, and as media theorist James Carey wrote in his foundational work on journalism's civic purpose, the function of journalism is not just to relay facts, but to help people understand the world and participate in it. Values awareness strengthens that function.</p>
+
+    <!-- PART 2 -->
+    <h2 id="patterns">Part 2: Values patterns in UK media</h2>
+
+    <table class="patterns-table">
+      <thead>
+        <tr>
+          <th>Value emphasised</th>
+          <th>What it looks like</th>
+          <th>What it reinforces</th>
+          <th>Alternative approach</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="value-name">Wealth</span></td>
+          <td>Leading stories with economic arguments. Justifying social goods through financial benefit. Measuring impact in pounds and GDP.</td>
+          <td>The idea that things only matter if they have economic value. That economic arguments are more 'serious' than other grounds for concern.</td>
+          <td class="alt-text">Lead with community impact, human experience, the significance to the natural world. Include economic context where relevant but in service to these – not as the primary frame.</td>
+        </tr>
+        <tr>
+          <td><span class="value-name">Individual achievement</span></td>
+          <td>Individual success stories. 'Rags to riches' narratives. Rich lists. Celebrity and hero focus. Framing social problems as requiring individual solutions.</td>
+          <td>The idea that change comes from exceptional individuals rather than collective action. That success is about beating others rather than lifting everyone.</td>
+          <td class="alt-text">Highlight collective efforts, community initiatives, shared successes and systemic solutions. Move away from focus on individuals, minimise shallow focus on celebrity. Avoid ranking people unless in service to pursuing greater equality.</td>
+        </tr>
+        <tr>
+          <td><span class="value-name">Security</span></td>
+          <td>Emphasising fear and disagreement. Focusing on what divides rather than what connects. Crisis reporting that defaults to threat and security framing.</td>
+          <td>A heightened sense of threat and insularity. The world is seen as more dangerous and divided than it actually is. A focus on symptoms rather than root causes.</td>
+          <td class="alt-text">Explore root causes, common ground and collaborative solutions. Cover genuine threats without sensationalising. Avoid amplifying isolated incidents disproportionately.</td>
+        </tr>
+        <tr>
+          <td><span class="value-name">Institutional authority and social power</span></td>
+          <td>Officials frame the story and institutional spokespeople lead. Affected communities and people experiencing the issue appear late, as background, quoted for story 'colour' or emotion.</td>
+          <td>A hierarchy of whose knowledge matters. Expert knowledge is vital and the erosion of trust in genuine expertise is a serious problem. Yet, institutional voices are routinely given structural priority, while the knowledge that comes from lived experience is treated as supplementary.</td>
+          <td class="alt-text">Rebalance who leads the story. Treat community knowledge as expertise. Ensure legitimate institutional and lived-experience voices receive appropriate weight. Both have value and balancing them strengthens journalism.</td>
+        </tr>
+        <tr>
+          <td><span class="value-name">Public image</span></td>
+          <td>Celebrity coverage framed as news. "Best dressed lists" and "most influential" rankings. Property coverage representing aspirational postcodes. Social-climbing narratives.</td>
+          <td>That worth depends on how you are perceived. That status and image matter more than substance.</td>
+          <td class="alt-text">Question these framings. When covering achievement or success, ask what values drove the person or project beyond status and wealth. What did they have to give up? Who supported them? What do they hope their work contributes to the world?</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Why these patterns persist</h3>
+    <p>These patterns have become invisible precisely because they are so familiar. Several factors reinforce them:</p>
+
+    <div class="numbered-list">
+      <div class="numbered-item">
+        <div class="num-circle">1</div>
+        <div>
+          <h4>Durable social norms</h4>
+          <p>'This is how it's always been done' and departing from it requires justification.</p>
+        </div>
+      </div>
+      <div class="numbered-item">
+        <div class="num-circle">2</div>
+        <div>
+          <h4>The psychology of attention</h4>
+          <p>Because humans are hardwired for survival, we are naturally drawn to threats, rewards, and power dynamics, which makes extrinsic values attention-grabbing.</p>
+        </div>
+      </div>
+      <div class="numbered-item">
+        <div class="num-circle">3</div>
+        <div>
+          <h4>The feeling of neutrality</h4>
+          <p>Economic framing feels 'neutral' because numbers seem objective, 'factual', and appear to cut through opinion and politics. But a certain framing doesn't become neutral just because it uses figures instead of words. Quantified data still carries choices about what to count, or whose 'costs' and 'benefits' matter most.</p>
+        </div>
+      </div>
+      <div class="numbered-item">
+        <div class="num-circle">4</div>
+        <div>
+          <h4>Traditional news values</h4>
+          <p>Journalists are trained to select and frame stories according to professional criteria, known as news values, that reward certain kinds of content: conflict, threat, economic impact, prominence, timeliness. These criteria are not inherently problematic; they reflect genuine judgements about what audiences need to know. But they tend to systematically favour extrinsic framings. A story about a youth centre closure scores highly on news values if it is framed as a crime risk or a council budget failure. It scores lower if it is framed around community loss or children's wellbeing, even if the latter is closer to what people in that community actually care about. News values and values in the Schwartz sense are not the same thing, but they interact: the professional logic of newsworthiness quietly shapes which human values get amplified.</p>
+        </div>
+      </div>
+      <div class="numbered-item">
+        <div class="num-circle">5</div>
+        <div>
+          <h4>Press releases</h4>
+          <p>PR professionals learn what framings travel furthest, and lean on established narratives around economic impact, institutional announcements and threat. Journalists working under time pressure encounter stories that arrive pre-framed. The conventions reinforce each other, not through conscious coordination, but through the accumulated logic of what works and is low risk in the current system.</p>
+        </div>
+      </div>
+      <div class="numbered-item">
+        <div class="num-circle">6</div>
+        <div>
+          <h4>Time pressure</h4>
+          <p>Familiar framings are faster for us to understand. Saying 'this costs £X billion' requires no context. Saying 'this matters for community wellbeing' requires building a case. Under deadline pressure, the faster frame wins. There is also a more basic layer of practical constraint that shapes coverage before framing decisions are even made: how many reporters are available that day, whether a journalist has an existing relationship with a source who can speak quickly. These conditions reflect the material reality of understaffed newsrooms working to constant deadlines. Values awareness doesn't erase those pressures, but it can help journalists make more intentional choices within them.</p>
+        </div>
+      </div>
+      <div class="numbered-item">
+        <div class="num-circle">7</div>
+        <div>
+          <h4>Media ownership interests</h4>
+          <p>Many media organisations are owned by individuals and corporations that benefit from a culture normalising wealth and power. This does not require editorial conspiracy – it simply reflects how the interests and commercial priorities of owners reinforce the same patterns.</p>
+        </div>
+      </div>
+    </div>
+
+    <p>Individual stories can appear insignificant. But the cumulative effect of thousands of stories, day after day, is powerful. If most stories frame social issues primarily through wealth and economics, celebrate individual achievement over collective action, emphasise threat and competition over common ground or root causes, centre powerful voices over affected communities, and present status and public image as aspirational, audiences come to believe that these matter more than intrinsic worth. This doesn't simply inform – it shapes our values and what we believe others value, which in turn shapes what we think and do.</p>
+
+    <!-- PART 3 -->
+    <h2 id="your-context">Part 3: Your context</h2>
+    <p>Many journalists we speak to chose this career because they care deeply about the world – they're motivated to work in the media by their intrinsic values.</p>
+    <p>Many, however, work within organisations where profit and shareholder value dominate organisational priorities. This creates pressures that shape what values tend to be foregrounded in their editorial content. Making values conscious doesn't change that fact. But wherever you sit, you have some sphere of influence, even if it's small.</p>
+    <p>So what can you do in your context, with the power you have, to move toward more aware and transparent practice?</p>
+
+    <h3>Three contexts</h3>
+    <div style="margin: 32px 0;">
+      <div style="background: rgba(200,224,0,0.2); border-left: 4px solid var(--lime); padding: 28px 32px; margin-bottom: 3px;">
+        <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: #4a6600; margin: 0 0 12px 0;">Independent, public-interest and reader-funded outlets</h4>
+        <p style="font-size: 15px; line-height: 1.75; color: var(--text); margin: 0;">This includes reader-supported media, public-interest journalism, outlets with mission-aligned ownership, community media and non-profit journalism. Where ownership, organisational purpose and staff values align, the full framework in this toolkit becomes available. You can move through all three stages described in Part 4.</p>
+      </div>
+      <div style="background: rgba(229,0,125,0.07); border-left: 4px solid var(--magenta); padding: 28px 32px; margin-bottom: 3px;">
+        <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--magenta); margin: 0 0 12px 0;">Journalists working in commercially driven organisations</h4>
+        <p style="font-size: 15px; line-height: 1.75; color: var(--text); margin: 0;">This includes staff and freelance journalists working within organisations where profit maximisation and shareholder value dominate the organisation's objectives and influence editorial priorities. You face significant structural constraints. You may not be able to shift organisational values or ownership interests, but you still have agency within your sphere of influence. Part 4 describes how to work with that.</p>
+      </div>
+      <div style="background: rgba(10,10,120,0.05); border-left: 4px solid var(--navy); padding: 28px 32px;">
+        <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--navy); margin: 0 0 12px 0;">Those working for structural change</h4>
+        <p style="font-size: 15px; line-height: 1.75; color: var(--text); margin: 0;">This includes people developing new ownership models, advocates working on policy reform or public funding mechanisms, and those building alternative media infrastructure. To better serve the public, transformation of the UK media landscape will require changes beyond any individual outlet. This toolkit can sit alongside that work.</p>
+      </div>
+    </div>
+
+    <h3>A note on audiences</h3>
+    <p>Some outlets intentionally serve audiences who actively seek financial or status information – the Financial Times is an obvious example. Values awareness doesn't mean all outlets prioritise the same values, it means being transparent and intentional about which values you are serving, and why, rather than defaulting to extrinsic framing unconsciously.</p>
+
+    <!-- PART 4 -->
+    <h2 id="three-stages">Part 4: The framework – three stages of values awareness</h2>
+    <p>This framework describes three stages of values awareness, from unconsciously reinforcing certain values, to being transparent about values in ways that better reflect what most people care about. Think of it as a stairway rather than a checklist – each stage builds on the previous one and the movement is gradual.</p>
+    <p>Remember that your context (see Part 3) shapes which stages are accessible to you and how quickly you might move through them.</p>
+
+    <div class="stages-overview">
+      <div class="stage-row">
+        <div class="stage-num-block">1</div>
+        <div class="stage-content">
+          <h4>Unconsciously reinforcing certain values</h4>
+          <p>"We just report the facts."</p>
+        </div>
+      </div>
+      <div class="stage-row">
+        <div class="stage-num-block">2</div>
+        <div class="stage-content">
+          <h4>Becoming aware of the values in your work</h4>
+          <p>"We recognise that journalism is value-laden."</p>
+        </div>
+      </div>
+      <div class="stage-row">
+        <div class="stage-num-block">3</div>
+        <div class="stage-content">
+          <h4>Transparent and responsible values practice</h4>
+          <p>"We name the values in our journalism and work to close the values perception gap."</p>
+        </div>
+      </div>
+    </div>
+
+    <p>These stages are not about 'good' or 'bad' journalists. Most UK journalism currently operates at Stage 1, not because journalists are doing something wrong, but because values awareness is not part of professional training or culture, so the default is unconscious reinforcement.</p>
+
+    <!-- STAGE 1 -->
+    <div class="stage-detail" id="stage-1">
+      <div class="stage-detail-header">
+        <div class="stage-big-num">1</div>
+        <div>
+          <h3>Unconsciously reinforcing certain values</h3>
+          <p class="stage-quote">"We just report the facts."</p>
+        </div>
+      </div>
+      <p>At Stage 1, journalism operates with a genuine belief in values-neutrality and a professional commitment to objective reporting. Values are present in every choice, but go unnoticed.</p>
+      <h4>What this looks like</h4>
+      <ul class="check-list">
+        <li>You tend to think of your work as 'reporting the facts' and your professional identity is built around being an 'objective observer'</li>
+        <li>You have not thought much about values – your own, your organisation's, or those embedded in professional norms</li>
+        <li>You tend to follow established professional conventions about how stories are told – conventions that most journalists in the industry share</li>
+        <li>You are not aware of patterns in how your coverage foregrounds certain values over others and the impact that this has on mainstream culture</li>
+      </ul>
+      <p>Most journalists are at Stage 1 and this is entirely understandable. If values awareness has never been part of your training or professional culture, you cannot choose it. Stage 1 is a starting point, not a judgement.</p>
+      <div class="callout callout-example">
+        <div class="example-label">Stage 1 in practice</div>
+        <p>A story about a new housing development quotes the local council, a property developer and an economist, noting that average house prices are expected to rise 8% following the build. A family on the housing waiting list, who have been in temporary accommodation for two years, appears in paragraph 10 as a 'human interest' angle. Nobody made a conscious choice to frame housing as an asset class. It reflects how housing stories have been written for decades. But the cumulative effect is to suggest that its primary purpose is wealth generation, not shelter, community or the right to a stable home. This isn't an argument against economic information, it's an argument against economic framing as the default organising logic.</p>
+      </div>
+      <h4>Moving to Stage 2 – start asking</h4>
+      <ul class="check-list">
+        <li>What values might this framing foreground?</li>
+        <li>Is there another way to tell this story?</li>
+        <li>Whose perspective am I centring and why?</li>
+        <li>What am I assuming about what matters to my audience?</li>
+      </ul>
+    </div>
+
+    <!-- STAGE 2 -->
+    <div class="stage-detail stage-2" id="stage-2">
+      <div class="stage-detail-header">
+        <div class="stage-big-num">2</div>
+        <div>
+          <h3>Conscious awareness of values</h3>
+          <p class="stage-quote">"We recognise journalism is value-laden."</p>
+        </div>
+      </div>
+      <p>At Stage 2, you begin to see values everywhere in your work and you can't unsee them. This awareness creates choices.</p>
+      <h4>What this looks like</h4>
+      <ul class="check-list">
+        <li>You recognise that all journalism involves values choices</li>
+        <li>You notice how editorial decisions signal what matters and how the media helps shape cultural values</li>
+        <li>You understand the values perception gap and the media's role in it</li>
+        <li>You are beginning to question why 'we've always done it this way'</li>
+        <li>You may feel some tension between your growing awareness and your existing practice</li>
+      </ul>
+      <div class="callout callout-example">
+        <div class="example-label">Stage 2 in practice</div>
+        <p>A crime reporter notices that coverage always emphasises punishment over rehabilitation and starts asking editors: 'Could we try a different framing?'. An environment editor questions why climate coverage always leads with economic arguments. A freelance journalist realises pitches framed around community care get less traction than those framed around local conflict, and begins documenting this pattern.</p>
+      </div>
+
+      <h4>Two possible paths from Stage 2</h4>
+      <p>Once you are aware that journalism is values-laden, you face a choice about what to do with that awareness.</p>
+
+      <div class="path-block path-a">
+        <h4>Path A: Using values to influence outcomes</h4>
+        <p>This means treating values as tools to achieve predetermined ends – selecting or framing them strategically to persuade or to serve particular goals. This happens across communications generally and journalism is not immune. It takes two forms:</p>
+        <div class="sub-path">
+          <h5>Using intrinsic values to serve extrinsic goals</h5>
+          <p>This is where intrinsic values language is used primarily to serve profit, status or power. For example, in journalism this could look like a publication invoking values such as accountability, truth-telling or giving voice to ordinary people in its branding, editor's letters, or public positioning, while its actual editorial decisions are driven by click metrics, advertiser relationships or proprietorial interests. The values are real in the rhetoric but absent in the practice. Research by academics Rachel Ruttan and Loran Nordgren suggests that when values language is deployed manipulatively, people become cynical about it, which weakens their connection to those values over time.</p>
+        </div>
+        <div class="sub-path">
+          <h5>Using extrinsic values to pursue intrinsic goals</h5>
+          <p>This can happen when a journalist understands that an outcome connected to an intrinsic value – refugee welfare, say – is newsworthy because it matters to audiences or carries genuine social importance, but uses an extrinsic frame to make the story feel acceptable to editors, or meet the norms of 'serious' journalism or mainstream culture. For example, framing a story about refugees in terms of economic contribution because that feels more legitimate than leading with human welfare directly. We see the same with stories justifying protection of nature for its value in GDP. The intentions may be sound, but these framings reinforce the idea that people only matter if they are economically productive, and perpetuate the perception gap by assuming audiences need extrinsic reasons to care, when research shows most do not.</p>
+        </div>
+        <p>Both paths lead away from Stage 3, for different reasons. The first erodes trust as it can feel manipulative to audiences and 'cheapens' intrinsic values. The second inadvertently reinforces the value imbalance it is trying to work around.</p>
+      </div>
+
+      <div class="path-block path-b">
+        <h4>Path B: Authentic values awareness</h4>
+        <p>This path involves genuine inquiry into your own values, your organisation's, those present in your work, those held by your community and those within the world around you. What this looks like in practice:</p>
+        <ul class="check-list" style="margin-top: 12px;">
+          <li><strong>Personal enquiry:</strong> What are my core values? What values drew me to journalism? When does my work feel aligned with my values, and where does it feel in tension?</li>
+          <li><strong>Practice examination:</strong> What values does this framing foreground? Whose voices am I centring and why? Am I assuming that my sources or audiences are primarily motivated by power, wealth or social status, when community or care might be closer to the truth?</li>
+          <li><strong>Newsroom conversations:</strong> Questioning defaults with colleagues, noticing patterns across coverage, identifying gaps between intentions and impact.</li>
+          <li><strong>Organisational awareness:</strong> What values does my organisation actually prioritise compared to what it states? What values are reflected in how we define 'success' or 'good'?</li>
+        </ul>
+        <p style="margin-top: 16px;">Common experiences at this stage include discomfort, as seeing values everywhere can be unsettling, tension where journalists' own values feel at odds with their outlet's practice and a sense of isolation, yet, curiosity to learn more and find others working on similar questions.</p>
+      </div>
+
+      <h4>Moving to Stage 3</h4>
+      <p>The shift requires a commitment to making values visible rather than keeping them implicit, and taking active steps to close the perception gap.</p>
+    </div>
+
+    <!-- STAGE 3 -->
+    <div class="stage-detail stage-3" id="stage-3">
+      <div class="stage-detail-header">
+        <div class="stage-big-num">3</div>
+        <div>
+          <h3>Transparent and responsible values practice</h3>
+          <p class="stage-quote">"We name the values in our journalism and work to close the perception gap."</p>
+        </div>
+      </div>
+      <p>At Stage 3, values awareness becomes visible and active. This stage has two related but distinct dimensions:</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin: 24px 0 32px 0;">
+        <div style="background: rgba(200,224,0,0.15); border-top: 3px solid var(--lime); padding: 24px;">
+          <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; color: #4a6600; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 12px 0;">Being transparent</h4>
+          <p style="font-size: 14px; line-height: 1.7; margin: 0; color: #444;">Telling your audience what values shape your editorial choices, whatever those values are. Transparency is about honest process.</p>
+        </div>
+        <div style="background: rgba(10,10,120,0.06); border-top: 3px solid var(--navy); padding: 24px;">
+          <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; color: var(--navy); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 12px 0;">Being responsible</h4>
+          <p style="font-size: 14px; line-height: 1.7; margin: 0; color: #444;">Going a step further by actively working to foreground the intrinsic values that research shows most people hold but that the media tends to underrepresent, and in doing so, helping to close the perception gap. This is Common Cause Foundation's declared position: we believe this is what responsible journalism, in service of an informed public, looks like. But we offer it as a perspective, not a directive.</p>
+        </div>
+      </div>
+
+      <p>A journalist can be at Stage 3 while choosing to foreground different values from those we recommend from values research. The key thing is to do so consciously, transparently, and in honest service of their audience. Values awareness is a tool, responsibility is a choice about how to use it.</p>
+      <p>The Responsible Media Forum's long-running Mirrors or Movers project poses a question that sits at the heart of Stage 3: does media content simply mirror society – reflecting existing norms and values back to audiences – or does it move it, actively shaping how people see the world and each other? The Forum's research suggests the latter. Stage 3 is about being honest that journalism shapes culture, and taking responsibility for doing so more intentionally and transparently.</p>
+      <p>Foregrounding intrinsic values means making a professional judgement, grounded in evidence about what people actually hold dear, that coverage should reflect more of human experience than extrinsic framings allow. That judgement sits alongside, not instead of, the editorial instinct to pursue stories that matter even when audiences have not asked for them.</p>
+
+      <p>The values-aware approach connects to other shifts happening in journalism. For example: change-centric journalism, which defines success by the impact a story facilitates; constructive journalism, a solution-focused approach that creates a more accurate picture of reality by focusing on responses to problems in coverage; and engaged journalism, which focuses on listening to a community's needs and involving them in the reporting process. Such approaches share the understanding that journalism that is honest about its role in shaping public life, and intentional about how it does so, is more valuable to audiences, communities and democracy than journalism that pretends to be a neutral relay of facts.</p>
+
+      <h4>What this looks like</h4>
+      <ul class="check-list">
+        <li><strong>Being explicit:</strong> you name the values that shape your coverage – your own and your outlet's – rather than leaving them implicit</li>
+        <li><strong>Being transparent:</strong> you let audiences know how and why editorial decisions are made, in whatever form is available to you</li>
+        <li><strong>Being consistent:</strong> what you say about your values is reflected in what you publish</li>
+        <li><strong>Being active:</strong> you make conscious choices in editorial decisions to consider what values are being foregrounded</li>
+        <li><strong>Being socially responsible:</strong> you actively work to close the perception gap by foregrounding the intrinsic values that research shows are underrepresented and matter more to people</li>
+        <li><strong>Being open:</strong> you create space for audiences to reflect on what matters most to them about the issues you cover</li>
+      </ul>
+
+      <h4>Stage 3 in practice: four approaches</h4>
+      <p>Values awareness can take different forms depending on your role, outlet and level of influence. Some approaches are personal and informal, others require editorial or organisational backing.</p>
+
+      <div class="approach-block ap-magenta" style="margin-top: 24px;">
+        <h4>Approach 1: Personal and informal disclosure</h4>
+        <p>The most immediately available form of transparency is personal, which can mean naming your values and your approach in spaces you control. This does not require editorial agreement or organisational sign-off, and it builds trust with audiences through being honest about the lens shaping your work.</p>
+        <p><strong>What this looks like in practice, and why it matters for accuracy and public service:</strong></p>
+        <ul class="check-list">
+          <li>A freelance journalist adds to their website: "I cover migration by centring the experiences and voices of people on the move. I believe this produces more accurate journalism because it reflects the human reality behind policy debates that institutional sources alone cannot provide."</li>
+          <li>A local reporter includes in their newsletter: "I cover this town because I live here and care about it. I want to be transparent that my coverage prioritises community wellbeing and civic participation. I think that's what local journalism is for."</li>
+          <li>A political journalist notes on their social media profile: "I try to cover politics through the lens of what it means for people's daily lives, not just as a game of winners and losers. I think that serves my audience better and produces more useful journalism."</li>
+        </ul>
+        <p>In each case the journalist is not just disclosing a preference, they are making a case for why their approach produces better journalism.</p>
+      </div>
+
+      <div class="approach-block" style="margin-top: 3px;">
+        <h4>Approach 2: Transparent editorial principles</h4>
+        <p>At an outlet level, values transparency means publishing clear, honest articulations of the values guiding editorial decisions, not simply a standard editorial policy covering accuracy and impartiality. It means offering an explanation of purpose, what the outlet is for, what it seeks to foreground and why. This could operate across the whole outlet or individual beats.</p>
+        <p>It's worth being clear about how this differs from what the industry often calls 'editorial values' – a term used interchangeably with editorial ethics and standards. Those standards address how journalism is conducted. However, a story can meet every standard of accuracy and impartiality while still unconsciously foregrounding certain values; transparent editorial principles go further. It is also honest to say that this is a developing area. Some outlets have gone a long way toward making their values explicit; others have taken important steps in that direction without yet using the language of values awareness specifically. Both matter, and both are worth pointing to.</p>
+
+        <p><strong>Outlets making their editorial purpose explicit:</strong></p>
+        <div class="outlet-example">
+          <h5>Positive News</h5>
+          <p>Exists to report on progress and possibility, contributing to a more complete picture of the world and helping audiences engage with it more constructively. It publishes its editorial approach openly and offers a transparent values position. It tells audiences what it foregrounds and why, and it reflects a conscious move beyond problem-focused framing that dominates most news.</p>
+        </div>
+        <div class="outlet-example">
+          <h5>LAist (USA)</h5>
+          <p>Reporters and producers create personal mission statements explicitly outlining the topics each journalist is committed to covering, sharing their personal connections to their work and why it matters. This makes values visible at the level of individual journalists within an organisational context, not as a branding exercise, but as a genuine account of what each person is trying to do and for whom.</p>
+        </div>
+
+        <p style="margin-top: 20px;"><strong>Outlets building structural transparency into individual editorial decisions:</strong></p>
+        <div class="outlet-example">
+          <h5>Aftonbladet (Sweden)</h5>
+          <p>Embeds 'ethics boxes' directly within articles, offering short explanations of specific editorial decisions, such as why a suspect was or wasn't named, or how sources were verified. The outlet has found that many users want to click and read the information. Those who clicked were more likely to understand and agree with the editorial decisions, and this was connected to users perceiving the content as credible. This is process transparency rather than values transparency in the fullest sense. It makes editorial decisions visible without necessarily naming the values behind them. But it demonstrates that explaining why you made a specific editorial choice, at the moment it matters, builds rather than undermines credibility. An environment desk that publishes a brief note alongside a story – "we led with the human experience here rather than the economic cost, because we believe that more accurately reflects what our readers care about and produces stronger journalism" – is doing the same thing at the level of values.</p>
+        </div>
+        <div class="outlet-example">
+          <h5>De Correspondent (Netherlands)</h5>
+          <p>Built its editorial model around transparency about journalists' worldviews and moral convictions. Their founding principles include an explicit commitment that journalists will be transparent about their values rather than claiming neutrality. This is framed as a route to more honest and accurate journalism, not as advocacy. The organisation publishes annual editorial and financial reports to members, and reporters have public notebooks showing their working process. This is probably the closest existing model we know of to what values-aware editorial principles look like in practice.</p>
+        </div>
+        <p>Having explicit values transparency – naming what human values an outlet seeks to foreground, why and what effect it hopes that has on audiences and culture – is still rare. Most of these examples are steps toward it and this toolkit's aim is to help move it further.</p>
+      </div>
+
+      <div class="approach-block ap-lime" style="margin-top: 3px;">
+        <h4>Approach 3: Inviting audience reflection and dialogue</h4>
+        <p>A distinct and accessible form of values transparency is inviting audiences into a conversation about values – not just telling them what you foreground – but creating space to explore what matters to them in the issues you cover. This is different from the previous approaches because it treats audiences as active participants rather than recipients of a disclosure.</p>
+        <p>This can be as simple as a question at the end of a newsletter or article: "What matters most to you about this issue – the economic impact, the effect on your community, the environmental dimension, something else entirely? We'd love to hear." Or it might mean holding a listening session with communities you cover regularly to find out what they value about the place or issue you're reporting on.</p>
+        <p>This does several things at once. It signals to audiences that their values are relevant and welcome in journalism – countering the implicit message that only institutional or economic perspectives count. It gives journalists genuine information about what their audience actually cares about, which strengthens future coverage and helps close the perception gap from the ground up. And it builds the kind of relationship between journalists and communities that research consistently shows is connected to trust and loyalty.</p>
+        <p>There is a further dimension worth noting. Common Cause Foundation's research, drawing on work by values psychologists including Greg Maio and colleagues, shows that values can be temporarily activated by communications and experiences, and that repeated activation strengthens them in the same way that muscles grow stronger with use.</p>
+        <p>Inviting audiences to reflect on and articulate what matters most is therefore not just a listening exercise. The act of engaging people's values may itself help to strengthen them and increase people's sense that they are shared. For journalism, this kind of dialogue about values is not only good practice for understanding your audience, it may directly contribute to closing the perception gap.</p>
+        <p>Research by journalism scholars Sue Robinson and Patrick Johnson with Trusting News found that when journalists held genuine listening sessions with disengaged community members – asking what journalism gets wrong, what causes harm, what would build trust – more than two-thirds said the conversations had built trust with the outlet and its journalists, and a third said they were considering subscribing. The conversation itself was the act of values-aware journalism. It treated people's experiences and perspectives as important, and they felt it.</p>
+      </div>
+
+      <div class="approach-block" style="margin-top: 3px;">
+        <h4>Approach 4: Structural accountability</h4>
+        <p>The most developed form of values transparency is structural. This means building accountability mechanisms into how an outlet operates so that transparency is ongoing rather than occasional, and audiences have genuine means of holding media organisations to account. This goes beyond what any individual journalist can do alone – it requires editorial and organisational commitment.</p>
+        <p>Community newsrooms The Ferret and Bristol Cable have embedded member accountability into their founding structures. Based in Scotland, The Ferret is run as a cooperative where members elect its board and approve its editorial guidelines. Bristol Cable is member-owned, with regular, open editorial meetings where readers can question and challenge coverage decisions. In both cases, transparency about values is not a communication strategy – it is a governance structure. The values that guide editorial decisions are clear and accountable to the people the journalism serves.</p>
+        <p>The Bureau of Investigative Journalism's Bureau Local project developed a model of collaborative, community-rooted reporting where journalists work alongside communities on stories they identify as important, and with its methodology made visible throughout. The explicit aim is journalism that serves the people it covers, with accountability built into the process rather than declared after the fact.</p>
+        <p>Pittsburgh's PublicSource outlet developed a 'Talking to Journalists' postcard in multiple languages, particularly for immigrant communities, explaining people's rights and what to expect when approached by reporters. This is transparency in service of the communities journalism claims to serve, making the process legible to those with least power within it. It is a structural choice that reflects a values position – that the people journalism covers deserve to understand and navigate it on their own terms.</p>
+      </div>
+
+      <h4 style="margin-top: 40px;">Potential benefits of Stage 3</h4>
+      <ul class="check-list">
+        <li><strong>Supporting trust:</strong> Research suggests transparency does not automatically increase trust. However, thoughtful transparency can help audiences understand how journalism works and evaluate it more fairly. Over time, this openness can contribute to trust, particularly when it is backed by consistent practice rather than declarations alone.</li>
+        <li><strong>Strengthening accountability:</strong> Publicly stating your editorial commitment and approach to values – about what you are trying to do and why – gives audiences a clearer basis for holding you to account. Transparency allows people to assess whether coverage aligns with stated values commitments, and creates stronger incentives for consistency and reflection.</li>
+        <li><strong>Avoiding values-washing:</strong> Clear, practice-based transparency makes it harder to rely on vague or symbolic claims about values. Explaining how values shape real editorial decisions demonstrates they are operational rather than rhetorical.</li>
+        <li><strong>Serving audiences better:</strong> Journalism that foregrounds what truly matters to people is journalism in genuine service of an informed public, and supports the engagement, trust and reader loyalty that increasingly underpin sustainable media business models.</li>
+        <li><strong>Helping to close the perception gap:</strong> When journalism more accurately reflects what people value, it counters the widespread but mistaken belief that most people are primarily motivated by self-interest, thus fulfilling one of journalism's core purposes of helping us understand each other and the world we share – empowering the informed.</li>
+      </ul>
+
+      <h4>Potential challenges and responses at Stage 3</h4>
+      <div style="display: grid; grid-template-columns: 1fr; gap: 3px; margin-top: 20px;">
+        <div class="challenges-block">
+          <h5>Fear of losing 'objectivity' credibility</h5>
+          <p>Some journalists might worry that naming values undermines their professional standing. But transparency about values is more honest than pretending they don't exist and influence us. All journalism involves values choices – being explicit about yours is a mark of rigour, not partisanship.</p>
+        </div>
+        <div class="challenges-block">
+          <h5>Organisational resistance</h5>
+          <p>There may be a concern that editors or leadership will be uncomfortable with explicit values talk. Start small. Pilot with one story, one beat, one newsletter. Build evidence that values-aware journalism is consistent with high-quality, rigorous reporting.</p>
+        </div>
+        <div class="challenges-block">
+          <h5>The commercial question</h5>
+          <p>The industry trend toward relationship-building, audience-first approaches and reader revenue all point in an encouraging direction. As the listening sessions research described in Approach 3 shows, journalism that genuinely reflects what people care about builds the loyalty and reader revenue that financially sustainable media increasingly depends on. There is still uncertainty here, but the direction of travel is clear, and values-aware journalism sits squarely within it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-footer">
+      <a href="vaj_introduction.html" class="btn btn-outline">← Introduction</a>
+      <a href="vaj_apply.html" class="btn btn-magenta">Next: Apply It →</a>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <a href="https://commoncausefoundation.org" target="_blank" class="footer-logo" style="text-decoration:none;display:block;flex-shrink:0;"><img src="CCFoundation_MainVersion_White.png" alt="Common Cause Foundation" style="height:48px;width:auto;display:block;"></a>
+  <div class="footer-mid">A project of <a href="https://commoncausefoundation.org">Common Cause Foundation</a><br>valuesawarejournalism.org · CC BY-NC 4.0</div>
+  <div class="footer-links"><a href="vaj_introduction.html">About</a><a href="vaj_resources.html#get-in-touch">Contact</a><a href="https://www.linkedin.com/company/common-cause-foundation" target="_blank">LinkedIn</a><a href="https://bsky.app/profile/commoncause.bsky.social" target="_blank">Bluesky</a></div>
+</footer>
+
+</body>
+</html>

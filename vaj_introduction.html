@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction | Values-aware journalism</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A0A78;
+    --magenta: #E5007D;
+    --lime: #C8E000;
+    --white: #ffffff;
+    --off-white: #F7F7F2;
+    --light-grey: #EBEBEB;
+    --text: #333333;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Open Sans', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+
+  nav {
+    background: var(--navy);
+    padding: 0 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 13px; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none !important; }
+  .nav-logo span { color: var(--magenta); }
+  .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+  .nav-links a { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); }
+  .nav-cta { background: var(--magenta); color: var(--white) !important; padding: 10px 22px; }
+
+  .page-hero {
+    background: var(--navy);
+    padding: 80px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 260px; height: 260px;
+    background: var(--lime);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    opacity: 0.6;
+  }
+  .page-hero-inner { position: relative; z-index: 2; max-width: 800px; }
+  .section-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; display: block; margin-bottom: 16px; color: var(--magenta); }
+  .page-hero h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(36px, 5vw, 60px); color: var(--white); line-height: 1.05; margin-bottom: 24px; }
+  .hero-rule { width: 64px; height: 4px; background: var(--magenta); margin: 24px 0; }
+  .page-hero p { font-size: 19px; line-height: 1.75; color: rgba(255,255,255,0.8); max-width: 620px; }
+
+  /* CONTENT */
+  .content-wrap {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    background: var(--off-white);
+    padding: 48px 32px;
+    border-right: 1px solid var(--light-grey);
+    position: sticky;
+    top: 68px;
+    height: calc(100vh - 68px);
+    overflow-y: auto;
+  }
+
+  .sidebar-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 16px;
+  }
+
+  .sidebar-links { list-style: none; }
+  .sidebar-links li { margin-bottom: 4px; }
+  .sidebar-links a {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    text-decoration: none;
+    display: block;
+    padding: 6px 12px;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .sidebar-links a:hover { color: var(--navy); border-left-color: var(--navy); background: rgba(10,10,120,0.04); }
+  .sidebar-links a.active { color: var(--navy); border-left-color: var(--magenta); font-weight: 700; }
+
+  .sidebar-divider { border: none; border-top: 1px solid var(--light-grey); margin: 20px 0; }
+
+  .main-content { padding: 64px 80px; max-width: 860px; }
+
+  h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 32px;
+    color: var(--navy);
+    line-height: 1.15;
+    margin-bottom: 20px;
+    margin-top: 56px;
+  }
+
+  h2:first-child { margin-top: 0; }
+
+  h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 16px;
+    margin-top: 40px;
+    line-height: 1.3;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .callout {
+    border-left: 4px solid var(--magenta);
+    padding: 20px 24px;
+    background: var(--off-white);
+    margin: 32px 0;
+  }
+  .callout p { font-size: 15px; font-style: italic; color: var(--navy); line-height: 1.65; margin: 0; }
+
+  .callout-lime {
+    background: rgba(200,224,0,0.15);
+    border-left-color: var(--lime);
+  }
+
+  .callout-navy {
+    background: rgba(10,10,120,0.05);
+    border-left-color: var(--navy);
+  }
+  .callout-navy p { color: var(--navy); font-style: normal; font-weight: 600; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    margin: 40px 0;
+  }
+
+  .stat-box {
+    padding: 40px 36px;
+  }
+
+  .stat-box:first-child { background: var(--magenta); }
+  .stat-box:last-child { background: var(--navy); }
+
+  .stat-box .number {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 56px;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .stat-box p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .who-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    margin: 32px 0;
+  }
+
+  .who-card {
+    background: var(--off-white);
+    padding: 32px 28px;
+  }
+
+  .who-card h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .who-card p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  ul.content-list {
+    padding-left: 0;
+    list-style: none;
+    margin: 20px 0;
+  }
+
+  ul.content-list li {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+    padding: 8px 0 8px 20px;
+    border-bottom: 1px solid var(--light-grey);
+    position: relative;
+  }
+
+  ul.content-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 18px;
+    width: 8px;
+    height: 2px;
+    background: var(--magenta);
+  }
+
+  .levels-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3px;
+    margin: 32px 0;
+  }
+
+  .level-card {
+    background: var(--navy);
+    padding: 32px 28px;
+  }
+
+  .level-num {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 32px;
+    color: var(--lime);
+    margin-bottom: 12px;
+  }
+
+  .level-card h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .level-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .nav-footer {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--light-grey);
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+
+  .btn-magenta { background: var(--magenta); color: var(--white); }
+  .btn-magenta:hover { background: var(--navy); }
+
+  footer {
+    background: #070740;
+    padding: 48px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 12px; color: var(--white); text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; }
+  .footer-logo span { color: var(--magenta); }
+  .footer-mid { font-size: 12px; color: rgba(255,255,255,0.4); text-align: center; line-height: 1.7; }
+  .footer-mid a { color: var(--lime); text-decoration: none; }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-links a { font-size: 11px; color: rgba(255,255,255,0.35); text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; }
+  .footer-links a:hover { color: var(--white); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Values-aware <span>journalism</span></a>
+  <ul class="nav-links">
+    <li><a href="vaj_introduction.html" class="active">Introduction</a></li>
+    <li><a href="vaj_framework.html">The Framework</a></li>
+    <li><a href="vaj_apply.html">Apply It</a></li>
+    <li><a href="vaj_tools.html">Practical Tools</a></li>
+    <li><a href="vaj_resources.html">Resources</a></li>
+    <li><a href="Values%20aware%20journalism%20-%20A%20practical%20toolkit.pdf" class="nav-cta">Download PDF</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span class="section-label">Introduction</span>
+    <h1>Why this toolkit exists</h1>
+    <div class="hero-rule"></div>
+    <p>Every editorial choice shapes what matters to your audience. This toolkit is for journalists who want to understand how values are embedded in their work – and make more conscious, transparent choices.</p>
+  </div>
+</div>
+
+<div class="content-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-label">On this page</div>
+    <ul class="sidebar-links">
+      <li><a href="#why" class="active">Why this toolkit exists</a></li>
+      <li><a href="#problem">The problem</a></li>
+      <li><a href="#opportunity">The opportunity</a></li>
+      <li><a href="#what-it-offers">What this toolkit offers</a></li>
+      <li><a href="#who">Who it's for</a></li>
+      <li><a href="#language">A note on language</a></li>
+      <li><a href="#values">Our values as authors</a></li>
+    </ul>
+    <hr class="sidebar-divider">
+    <div class="sidebar-label">Next</div>
+    <ul class="sidebar-links">
+      <li><a href="vaj_framework.html">Part 1: Understanding Values →</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+
+    <h2 id="why">Why this toolkit exists</h2>
+    <p>A housing reporter sits down to write about a redevelopment project. Do they lead with property prices, community impact or environmental effects? Who are their sources? Who will they go to for comment?</p>
+    <p>A crime reporter covers a knife attack in a local neighbourhood. Other outlets have called it a "reign of terror", but don't mention the youth centre that closed three years ago, or that child poverty here is among the highest in the country.</p>
+    <p>An environment editor feels they need to justify a piece about protecting woodlands. The headline: "UK's trees worth £X billion to the economy".</p>
+    <p>Every choice you make about what to cover, how to frame it and whose voice to centre shapes what matters to your audience. Over time, these decisions shape what we all value – and what we believe others value too. These effects accumulate. Thousands of choices across hundreds of outlets shape what seems normal, naive or realistic in our culture.</p>
+
+    <div class="callout">
+      <p>"These effects accumulate. Thousands of choices across hundreds of outlets shape what seems normal, naive or realistic in our culture."</p>
+    </div>
+
+    <h2 id="problem">The problem: the gap between what matters to people and what we see in our culture</h2>
+    <p>Research like the European Values Study consistently shows that most people value things like equality, community and caring for nature. These things feel good to us, they don't depend on external recognition or reward. Psychologists call them 'intrinsic values'.</p>
+    <p>But research on traditional 'news values', and CCF's own research on how people perceive the media, suggests our journalistic culture tends to foreground a different set of values – things like wealth, status and power. Psychologists call these 'extrinsic values'.</p>
+
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="number">74%</div>
+        <p>of people prioritise intrinsic values over extrinsic ones</p>
+      </div>
+      <div class="stat-box">
+        <div class="number">77%</div>
+        <p>believe that other people are more motivated by things like wealth and social status</p>
+      </div>
+    </div>
+
+    <p>We call this the 'values perception gap'. This gap, between what we personally value and what we believe others do, has real consequences. Research shows it makes us feel less responsible for our communities, less likely to get involved – in everything from voting to volunteering – and less likely to support action on social and environmental issues.</p>
+
+    <h2 id="opportunity">The opportunity: to better reflect what matters to people</h2>
+    <p>If journalism's purpose is to serve communities by giving people accurate information to help them make informed decisions about their lives, then there is an inherent responsibility to reflect what matters to people. Journalists, perhaps more than any other profession, have the power to help close the perception gap.</p>
+    <p>The question isn't whether journalism is values-laden. It inherently is.</p>
+
+    <div class="callout callout-lime">
+      <p>Values are present at every level of news production: ownership, editorial, production and story level. This toolkit helps make them visible.</p>
+    </div>
+
+    <div class="levels-grid">
+      <div class="level-card">
+        <div class="level-num">01</div>
+        <h4>Ownership level</h4>
+        <p>Purpose and profit – the values embedded in how media organisations are structured and funded.</p>
+      </div>
+      <div class="level-card">
+        <div class="level-num">02</div>
+        <h4>Editorial level</h4>
+        <p>What makes something 'newsworthy'? Who decides what gets covered and how?</p>
+      </div>
+      <div class="level-card">
+        <div class="level-num">03</div>
+        <h4>Production level</h4>
+        <p>How journalists work with sources, communities and each other day-to-day.</p>
+      </div>
+      <div class="level-card">
+        <div class="level-num">04</div>
+        <h4>Story level</h4>
+        <p>Individual framing choices – every word, headline and source selection.</p>
+      </div>
+    </div>
+
+    <h2 id="what-it-offers">What this toolkit offers</h2>
+    <p>This toolkit is about being intentional, transparent and reflective about the values your work communicates. This, in turn, can help you make more conscious editorial choices that better reflect the values that most people actually prioritise.</p>
+
+    <h3>This toolkit can help you</h3>
+    <ul class="content-list">
+      <li>Understand how values show up at every level of journalism, from individual word choices to media ownership</li>
+      <li>Recognise patterns in your own practice and the media more broadly</li>
+      <li>Make more conscious framing choices and be transparent about them</li>
+      <li>Have more informed conversations with colleagues and editors</li>
+      <li>Strengthen core journalistic functions: accurately informed citizenship, civic trust, democratic engagement</li>
+    </ul>
+
+    <h3>This toolkit cannot</h3>
+    <ul class="content-list">
+      <li>Solve structural problems like concentrated media ownership, lack of funding for public-interest journalism, or commercial pressures</li>
+      <li>Give you power you don't have in your organisation</li>
+    </ul>
+
+    <h2 id="who">Who this toolkit is for</h2>
+    <div class="who-grid">
+      <div class="who-card">
+        <h4>Journalists</h4>
+        <p>Anyone who wants to better understand how values are embedded in their work, what this means for their audience, and how to make more effective and conscious choices.</p>
+      </div>
+      <div class="who-card">
+        <h4>Editors &amp; newsroom leaders</h4>
+        <p>Those exploring how to embed values awareness in editorial practice, commissioning and newsroom culture.</p>
+      </div>
+      <div class="who-card">
+        <h4>Freelancers</h4>
+        <p>Writers and journalists navigating values tensions across different outlets and commissioners, with limited organisational support.</p>
+      </div>
+      <div class="who-card">
+        <h4>Anyone who suspects journalism can do better</h4>
+        <p>If you believe journalism can more accurately reflect what most people actually care about, this toolkit is for you.</p>
+      </div>
+    </div>
+
+    <h2 id="language">A note on language</h2>
+    <p>We use the term 'values-aware journalism' because, whether acknowledged or not, all journalism communicates things about what matters – values. The question is whether those values are conscious or unconscious, visible or hidden.</p>
+    <p>We also refer to the 'cultural footprint' of journalism. This is the impression that the media leaves on our shared sense of what matters and what matters to other people – similar to how a carbon footprint describes environmental impact.</p>
+
+    <h2 id="values">Our values as authors of this toolkit</h2>
+    <p>We want to be transparent about where we stand. We believe journalism that more accurately reflects the intrinsic values most people prioritise is more responsible journalism. We also believe that rebalancing our culture away from an overemphasis on extrinsic values – wealth, status and power – is necessary if we are to meaningfully address the serious economic, environmental and social challenges we face.</p>
+    <p>But we also recognise that values awareness is useful whatever values a journalist or outlet chooses to foreground. The important thing is that the choice is conscious and honest, not habitual and invisible.</p>
+
+    <div class="callout">
+      <p>"The important thing is that the choice is conscious and honest, not habitual and invisible."</p>
+    </div>
+
+    <div class="nav-footer">
+      <a href="vaj_framework.html" class="btn btn-magenta">Next: The Framework →</a>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <a href="https://commoncausefoundation.org" target="_blank" class="footer-logo" style="text-decoration:none;display:block;flex-shrink:0;"><img src="CCFoundation_MainVersion_White.png" alt="Common Cause Foundation" style="height:48px;width:auto;display:block;"></a>
+  <div class="footer-mid">
+    A project of <a href="https://commoncausefoundation.org">Common Cause Foundation</a><br>
+    valuesawarejournalism.org · CC BY-NC 4.0
+  </div>
+  <div class="footer-links">
+    <a href="vaj_introduction.html">About</a>
+    <a href="vaj_resources.html#get-in-touch">Contact</a>
+    <a href="https://www.linkedin.com/company/common-cause-foundation" target="_blank">LinkedIn</a>
+    <a href="https://bsky.app/profile/commoncause.bsky.social" target="_blank">Bluesky</a>
+  </div>
+</footer>
+
+</body>
+</html>
